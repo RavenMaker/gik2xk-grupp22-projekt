@@ -1,0 +1,119 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f3f3f3;
+}
+
+.menu-title {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.menu-item {
+  text-align: center;
+  padding: 20px;
+}
+
+.menu-link {
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+}
+
+.menu-link:hover {
+  color: black;
+}
+
+.menu-icon {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.extra-icon {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.menu-name {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.color-box {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.site-footer {
+  background-color: #222;
+  color: white;
+  padding: 30px 0;
+  margin-top: 50px;
+}
+
+.footer-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.footer-text {
+  color: #cfcfcf;
+  font-size: 15px;
+}
+
+.footer-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-link:hover {
+  color: #f0ad4e;
+}
+
+
+/*Pizzor*/
+
+.pizza-category{
+background:white;
+border-radius:10px;
+padding:25px;
+margin-bottom:40px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+.pizza-list li{
+margin-bottom:6px;
+font-size:17px;
+padding-left: 20px;
+
+}
+
+.pizza-header{
+display:flex;
+align-items:center;
+gap:25px;
+margin-bottom:20px;
+}
+
+.pizza-title{
+font-size:28px;
+font-weight:700;
+}
+
+.pizza-prices{
+font-size:18px;
+font-weight:600;
+color:#8a4a00;
+}
+
+.pizza-prices span{
+margin-left:15px;
+}
