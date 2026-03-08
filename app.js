@@ -70,7 +70,7 @@ function createTextInputs(title, description) {
 
 function getMenuItems(categoryName="") {
     const menuItem = {
-        Category1:['Pizza',{
+        Category1:['Pizza','Pizza Class 1',{
                 price1: 100,
                 price2: 150,
                 price3: 259,
@@ -78,11 +78,10 @@ function getMenuItems(categoryName="") {
                     item1:["Margherita Pizza", "En klassisk pizzamåltid med tomatsås, mozzarella och basill."],
                     item2:["Pepperoni Pizza", "En populär pizzamåltid med tomatsås, mozzarella och pepperoni."],  
                     item3:["Hawaiian Pizza", "En fruktig pizzamåltid med tomatsås, mozzarella och ananas."],
-                    item4:["Vegetarian Pizza", "En vegetarisk pizzamåltid med tomatsås, mozzarella och grönsaker."],
                     item5:["Meat Lovers Pizza", "En köttig pizzamåltid med tomatsås, mozzarella och köttfärs."],
                 }
             }],
-        Category2:['salad', {
+        Category2:['salad', 'vegetarian', {
                 price1: 40,
                 price2: 70,  
                 price3: 0,
@@ -94,7 +93,7 @@ function getMenuItems(categoryName="") {
                     item5:["Tuna Salad", "En frisk och smakrik sallat med tonfisk, avocado och dressing."],
                 }
             }],
-        Category3: ['dryck', {
+        Category3: ['dryck','dryck', {
                 price1: 25,
                 price2: 30,
                 price3: 50,
@@ -106,6 +105,16 @@ function getMenuItems(categoryName="") {
                     item4:["Mineralvatten", "En ren och frisk mineralvatten. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."],
                     item5:["Jordgubbsjuice", "En naturlig jordgubbsjuice med en fruktig smak. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."],
                 }
+            }],
+            Category4: ['Pizza','Pizza Class 2', {
+                price1: 125,
+                price2: 170,
+                price3: 270,
+                itemlist: {
+                    item1:["kebab Pizza", "kebab, ost, tomatsås"],
+                    item2:["HawaiiSpecial", "annanas, bannan, sinka, ost"],  
+                    item3:["kalsone", "inbakad pizza med ost, tomatsås"]
+                }
             }]
         };
     for (const category in menuItem) {
@@ -113,8 +122,8 @@ function getMenuItems(categoryName="") {
         if (categoryName === menuItem[category][0] || categoryName === "") {
         console.log(menuItem[category]);
         const card=createCard();
-        const CategiryTitle = menuItem[category][0];
-        const { price1, price2, price3, itemlist } = menuItem[category][1];
+        const CategiryTitle = menuItem[category][1];
+        const { price1, price2, price3, itemlist } = menuItem[category][2];
         card.appendChild(createPricesAndCategory(CategiryTitle, price1, price2, price3));
         for (const item in itemlist) {
             console.log(itemlist[item]);
@@ -130,4 +139,4 @@ function getMenuItems(categoryName="") {
 //de andra grejerna är bara för att skapa korten och lägga till texten i dom.
 //getCategorys är hur vi ska hämta datan från databasen och skapa korten utifrån det, men just nu så behöver vi bara fixa så att den hämta data ifrån de api så bör det funka
 
-container.appendChild(getMenuItems(""));
+container.appendChild(getMenuItems("Pizza"));
