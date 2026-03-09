@@ -117,6 +117,10 @@ color:#8a4a00;
 .pizza-prices span{
 margin-left:15px;
 }
+.pizza-img{
+  width: 250px;
+  height: 250px;
+}
 
 .price-list {
     display: flex;
@@ -158,3 +162,4 @@ margin-left:15px;
     margin: 2rem;
     padding: 2rem;
 }
+
