@@ -62,9 +62,10 @@ function createMenuItem(count) {
     return MenuItems;
 }
 
-function createLi(title, description) {
+function createLi(title, description,count) {
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${title}</strong> – ${description}`;
+    li.classList.add("Pizza-discription");
+    li.innerHTML = `${count}. <strong>${title}</strong> – ${description}`;
     return li;
 }
 
@@ -123,6 +124,7 @@ function getMenuItems(categoryName="") {
 
     };
     var count = 0;
+    var countItems = 1;
     for (const category in menuItem) {
         
         if (categoryName === menuItem[category][0] || categoryName === "") {
@@ -143,7 +145,8 @@ function getMenuItems(categoryName="") {
                 console.log(itemlist[item]);
                 const titel = itemlist[item][0];
                 const description = itemlist[item][1];
-                logFoodItems.appendChild(createLi(titel, description));
+                logFoodItems.appendChild(createLi(titel, description, countItems));
+                countItems++;
             }
         }
     }
