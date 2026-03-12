@@ -23,15 +23,16 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  * Synkroniserar databasen med Sequelize innan servern startar[cite: 222, 226].
  */
+const db = require('../models'); // Se till att du har rätt sökväg till dina modeller [cite: 124]
 db.sequelize
-  .sync() // Tips: Använd .sync({ alter: true }) under utveckling för att uppdatera tabeller utan att tömma dem[cite: 60, 62].
+  .sync() 
   .then(() => {
     server.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`); // Använder backticks (`) för korrekt variabel-sträng.
+      console.log(`Server is running on http://localhost:${port}`);
     });
   })
   .catch((e) => {
-    console.error('Kunde inte ansluta till databasen:', e); [cite: 12, 60]
+    console.error('Kunde inte ansluta till databasen:', e); 
   });
 
 /**
