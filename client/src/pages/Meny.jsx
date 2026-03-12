@@ -161,8 +161,8 @@ export default function Meny() {
 
 
 
-function CategoryCard({ category, catKey, itemIds }) {
-    const [title, { price1, price2, price3, imageClass, itemlist }] = category
+function CategoryCard({category, catKey, itemIds }) {
+    const [urlName,title, { price1, price2, price3, imageClass, itemlist }] = category
 
     return (
         <div className='pizza-category'>
