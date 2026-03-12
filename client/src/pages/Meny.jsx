@@ -115,15 +115,11 @@ export default function Meny() {
     return (
         <div>
             <h1 className="menu-title">Vår meny</h1>
-
-            {/* Kategori-knappar */}
             <div className="row menu">
-                {/* Visa alla */}
-
 
                 {topCategories.map((cat) => (
                     <div key={cat.href} className="col-md-4 col-sm-6 menu-item text-center">
-                        <a className="menu-link" onClick={(e) => { e.preventDefault(); setValdKategori(cat.href) }}>
+                        <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori(cat.href) }}>
                             <img className="menu-icon" src={cat.img} alt={cat.name} />
                             <div className="menu-name">{cat.name}</div>
                         </a>
