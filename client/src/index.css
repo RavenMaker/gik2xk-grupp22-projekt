@@ -19,10 +19,16 @@ body {
   padding: 6rem;
   width: 12rem;
   height: 10rem;
-  background-color: gold;
+  background: linear-gradient(45deg,rgba(255, 145, 0, 1) 0%, rgba(217, 217, 28, 1) 50%, rgba(255, 239, 94, 1) 100%);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   margin: 1rem;
   border-radius: 1rem;
+  transition: 0.5s;
 }
+.menu-item:hover{
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
 
 .menu-all {
   display: flex;
@@ -31,10 +37,14 @@ body {
   width: 10rem;
   height: 5rem;
   margin: 1rem;
-  background-color: orange;
+   background: linear-gradient(180deg,rgba(255, 145, 0, 1) 0%, rgba(217, 217, 28, 1) 50%, rgba(255, 239, 94, 1) 100%);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   border-radius: 1rem;
+  transition: 0.5s;
 }
-
+.menu-all:hover{
+   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
 .menu-link {
   text-decoration: none;
   color: black;
@@ -106,6 +116,10 @@ border-radius:10px;
 padding:25px;
 margin-bottom:40px;
 box-shadow:0 4px 10px rgba(0,0,0,0.1);
+transition: 0.5s;
+}
+.pizza-category:hover{
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
 
