@@ -119,11 +119,7 @@ export default function Meny() {
             {/* Kategori-knappar */}
             <div className="row menu">
                 {/* Visa alla */}
-                <div className="col-md-4 col-sm-6 menu-item text-center">
-                    <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
-                        <div className="menu-name">Visa alla</div>
-                    </a>
-                </div>
+
 
                 {topCategories.map((cat) => (
                     <div key={cat.href} className="col-md-4 col-sm-6 menu-item text-center">
@@ -133,6 +129,11 @@ export default function Meny() {
                         </a>
                     </div>
                 ))}
+                <div className="col-md-4 col-sm-6 menu-all text-center">
+                    <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
+                        <div className="menu-name">Visa alla</div>
+                    </a>
+                </div>
             </div>
 
             {valdKategori && (

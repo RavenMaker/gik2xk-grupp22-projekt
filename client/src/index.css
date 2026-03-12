@@ -16,9 +16,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  width: 11rem;
-  height: 15rem;
+  padding: 6rem;
+  width: 12rem;
+  height: 10rem;
+  background-color: gold;
+  margin: 1rem;
+  border-radius: 1rem;
+}
+
+.menu-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  height: 5rem;
+  margin: 1rem;
+  background-color: orange;
+  border-radius: 1rem;
 }
 
 .menu-link {

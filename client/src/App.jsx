@@ -43,7 +43,6 @@ function App() {
                     <h5 class="footer-title mb-2">Z krog Restaurang</h5>
                     <p class="mb-0 footer-text">God mat, snabb service och en meny för hela familjen</p>
                   </div>
-
                   <div class="col-md-6">
                     <ul class="footer-links list-unstyled d-flex flex-column flex-md-row justify-content-center justify-content-md-end gap-3 mb-0">
                       <li><Link to="/about" class="footer-link">Om oss</Link></li>
