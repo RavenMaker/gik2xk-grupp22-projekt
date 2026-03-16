@@ -10,5 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     underscored: true
   });
+  Rating.associate = (models) => {
+  // Ett betyg hör till en specifik produkt [cite: 187, 191]
+  Rating.belongsTo(models.Product, { foreignKey: 'product_id' });
+};
   return Rating;
 };
