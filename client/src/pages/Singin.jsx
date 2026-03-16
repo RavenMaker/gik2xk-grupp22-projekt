@@ -1,14 +1,25 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Importera useNavigate
+
 export default function Singin() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // 2. Initiera navigate
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Här skickar du data till din backend senare
-    console.log("Inloggningsförsök med:", email, password);
+    
+    // Enkel validering för att simulera inloggning
+    if (email === 'admin@zkrog.se' && password === 'admin123') {
+      console.log("Inloggad!");
+      navigate('/admin'); // 3. Skicka användaren till Admin-sidan
+    } else {
+      alert("Fel e-post eller lösenord! (Testa admin@zkrog.se / admin123)");
+    }
   };
-  return( <main className="form-signin w-100 m-auto" style={{ maxWidth: '330px', padding: '15px' }}>
+
+  return (
+    <main className="form-signin w-100 m-auto" style={{ maxWidth: '330px', padding: '15px' }}>
       <form onSubmit={handleSubmit}>
         <h1 className="h3 mb-3 fw-normal">Logga in (Admin)</h1>
 
@@ -20,6 +31,7 @@ export default function Singin() {
             placeholder="namn@exempel.se"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <label htmlFor="floatingInput">E-postadress</label>
         </div>
@@ -32,6 +44,7 @@ export default function Singin() {
             placeholder="Lösenord"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <label htmlFor="floatingPassword">Lösenord</label>
         </div>

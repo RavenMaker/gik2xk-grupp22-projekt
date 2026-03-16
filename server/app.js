@@ -2,8 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors = require('cors'); // Krävs för kommunikation med React [cite: 63]
-const cors = require('cors'); // Överst vid imports
+const cors = require('cors'); // Krävs för kommunikation med React [cite: 63]
 const app = express();
 
 // Importera rutter enligt arkitekturdiagrammet på sida 6 [cite: 98]

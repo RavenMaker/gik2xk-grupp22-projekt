@@ -75,7 +75,7 @@ export default function Meny() {
 
     // Hämta data när sidan laddas
     useEffect(() => {
-        fetch("http://localhost:3000/menu")     
+        fetch("http://localhost:5000/api/products/menu")     
             .then(res => {
                 if (!res.ok) throw new Error("Servern svarade med fel")
                 return res.json()

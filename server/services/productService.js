@@ -30,6 +30,42 @@ const productService = {
     return this._cleanProduct(product);
   },
 
+  // By request: return menu shaped like the client's `fallbackData` structure
+  async getMenu() {
+    const products = await Product.findAll();
+    const plain = products.map(p => (p.get ? p.get({ plain: true }) : p));
+
+    const grouped = {};
+    plain.forEach(p => {
+      const cat = (p.category || 'Övrigt').toString();//det ska ändras med produkt läggning//
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(p);
+    });
+
+    const out = {};
+    let idx = 1;
+    Object.entries(grouped).forEach(([catName, items]) => {
+      const itemlist = {};
+      items.forEach((it, i) => {
+        itemlist[`item${i + 1}`] = [it.title, it.description || ''];
+      });
+
+      out[`Category${idx++}`] = [
+        catName.toLowerCase(),
+        catName,
+        {
+          price1: items[0] ? items[0].price : 0,
+          price2: 0,
+          price3: 0,
+          imageClass: items[0] ? items[0].image_url : '',
+          itemlist
+        }
+      ];
+    });
+
+    return out;
+  },
+
   async addRating(productId, ratingValue) {
     return await Rating.create({
       product_id: productId,

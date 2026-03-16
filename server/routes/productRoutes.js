@@ -2,11 +2,63 @@ const express = require('express');
 const router = express.Router();
 const productService = require('../services/productService');
 
+// Extra: return menu-shaped data matching client's fallbackData structure
+router.get('/menu', async (req, res) => {
+  try {
+    const products = await productService.getAllProducts();
+
+    // Group products by category
+    const grouped = {};
+    products.forEach(p => {
+      const cat = (p.category || 'Övrigt').toString();
+      if (!grouped[cat]) grouped[cat] = { items: [], image: p.image_url || '' };
+      grouped[cat].items.push(p);
+      if (!grouped[cat].image && p.image_url) grouped[cat].image = p.image_url;
+    });
+
+    // Build fallback-like object
+    const out = {};
+    let i = 1;
+    Object.entries(grouped).forEach(([catName, info]) => {
+      const itemlist = {};
+      info.items.forEach((it, idx) => {
+        itemlist[`item${idx + 1}`] = [it.title, it.description || ''];
+      });
+
+      out[`Category${i++}`] = [
+        catName.toLowerCase(),
+        catName,
+        {
+          price1: info.items[0] ? info.items[0].price : 0,
+          price2: 0,
+          price3: 0,
+          imageClass: info.image || '',
+          itemlist
+        }
+      ];
+    });
+
+    res.json(out);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // 1. Hämta alla produkter
 router.get('/', async (req, res) => {
   try {
     const products = await productService.getAllProducts();
     res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Meny: returnerar menyn i samma format som klientens `fallbackData`
+router.get('/menu', async (req, res) => {
+  try {
+    const menu = await productService.getMenu();
+    res.json(menu);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
