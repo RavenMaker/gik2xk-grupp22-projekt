@@ -29,9 +29,9 @@ router.get('/menu', async (req, res) => {
         catName.toLowerCase(),
         catName,
         {
-          price1: info.items[0] ? info.items[0].price : 0,
-          price2: 0,
-          price3: 0,
+          price1: info.items[0] ? info.items[0].price1 : 0,
+          price2: info.items[0] ? info.items[0].price2 : 0,
+          price3: info.items[0] ? info.items[0].price3 : 0,
           imageClass: info.image || '',
           itemlist
         }
@@ -132,5 +132,7 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
 
 module.exports = router;

@@ -10,6 +10,7 @@ const productService = {
 
     return {
       id: plainProduct.id,
+      category: plainProduct.category,
       title: plainProduct.title,
       description: plainProduct.description,
       price: plainProduct.price,
