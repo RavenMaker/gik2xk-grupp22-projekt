@@ -74,17 +74,7 @@ export default function Meny() {
 
       <p className="lunch-text">Vår lunchmeny serveras måndag till fredag mellan kl. 11:00 och 14:00.</p>
 
-      <div style={{ marginBottom: 12 }}>
-        {isAdmin ? (
-          <>
-            <button onClick={() => setEditMode(e => !e)}>{editMode ? "Avsluta redigering" : "Redigera meny"}</button>
-            <button onClick={handleAdminLogout} style={{ marginLeft: 8 }}>Logga ut</button>
-            <button onClick={resetMenu} style={{ marginLeft: 8 }}>Återställ standard</button>
-          </>
-        ) : (
-          <button onClick={handleAdminLogin}>Logga in som admin</button>
-        )}
-      </div>
+      
 
       <div className="lunch-list">
         {weekdays.map(day => (
@@ -114,6 +104,17 @@ export default function Meny() {
             )}
           </section>
         ))}
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        {isAdmin ? (
+          <>
+            <button onClick={() => setEditMode(e => !e)}>{editMode ? "Avsluta redigering" : "Redigera meny"}</button>
+            <button onClick={handleAdminLogout} style={{ marginLeft: 8 }}>Logga ut</button>
+            <button onClick={resetMenu} style={{ marginLeft: 8 }}>Återställ standard</button>
+          </>
+        ) : (
+          <button onClick={handleAdminLogin}>Logga in som admin</button>
+        )}
       </div>
 
       {editMode && isAdmin && (
