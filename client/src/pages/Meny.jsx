@@ -155,65 +155,17 @@ export default function Meny() {
     const itemIds = {};
     let idCounter = 1;
     Object.entries(menuItem).forEach(([catKey, category]) => {
-<<<<<<< HEAD
-        Object.keys(category[2].itemlist).forEach(itemKey => {
-            itemIds[`${catKey}-${itemKey}`] = idCounter++
-        })
-    })
-    // Filtrera kategorier robustare genom att använda objektets entries (nyckel + kategori)
-    const normalize = (s) => {
-        if (!s) return ""
-        try {
-            return s.toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
-        } catch (e) {
-            return s.toString().toLowerCase()
-        }
-    }
-    const keyify = (s) => normalize(s).replace(/[^a-z0-9]/g, '')
-
-    const categoryEntries = Object.entries(menuItem).map(([key, category]) => ({ key, category }))
-
-    let visadeKategorier = categoryEntries
-        .filter(({ key, category }) => {
-            if (valdKategori === "") return true
-            const valKey = keyify(valdKategori)
-            const urlName = category[0] || ''
-            const title = category[1] || ''
-            const urlNameKey = keyify(urlName)
-            const titleKey = keyify(title)
-            // Jämför mot href (valKey) mot urlName/title eller objektens key
-            return valKey === urlNameKey || valKey === titleKey || valKey === keyify(key)
-        })
-        .map(e => e.category)
-
-    // Fallback: om ingen match hittades, försök permissiv match mot sammansatt text
-    if (valdKategori !== '' && visadeKategorier.length === 0) {
-        const permissive = categoryEntries
-            .filter(({ category }) => {
-                const combined = normalize(String(category[0] || '') + ' ' + String(category[1] || ''))
-                return combined.includes(normalize(valdKategori))
-            })
-            .map(e => e.category)
-        if (permissive.length > 0) visadeKategorier = permissive
-    }
-=======
         if (category[0] && category[0].toLowerCase() === "pizza") {
             Object.keys(category[2].itemlist).forEach(itemKey => {
                 itemIds[`${catKey}-${itemKey}`] = idCounter++;
             });
         }
     });
->>>>>>> 7be513198333ffa62541dceb04577b3863ecb791
 
     if (loading) return <p style={{ padding: '2rem' }}>Laddar meny...</p>
     if (error)   return <p style={{ padding: '2rem', color: 'red' }}>Fel: {error}</p>
 
     return (
-<<<<<<< HEAD
-        <div className="menu-page">
-            <h1 className="menu-title">Vår meny</h1>
-            <div className="row menu">
-=======
         <div>
             {/* NAVBAR (Varukorg) - Från kod 1 */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
@@ -241,7 +193,6 @@ export default function Meny() {
                     </div>
                 </div>
             </nav>
->>>>>>> 7be513198333ffa62541dceb04577b3863ecb791
 
             {/* Innehåll och Layout - Från kod 2 */}
             <div className="lunch-page container mt-4">
@@ -260,13 +211,6 @@ export default function Meny() {
                             <div className="menu-name">Visa alla</div>
                         </a>
                     </div>
-<<<<<<< HEAD
-                ))}
-                <div className="col-md-2 col-sm-7 menu-all text-center">
-                    <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
-                        <div className="menu-name">Visa alla</div>
-                    </a>
-=======
                 </div>
 
                 {valdKategori && (
@@ -287,7 +231,6 @@ export default function Meny() {
                                 onAdd={openPriceSelection} 
                             />
                         ))}
->>>>>>> 7be513198333ffa62541dceb04577b3863ecb791
                 </div>
             </div>
 
