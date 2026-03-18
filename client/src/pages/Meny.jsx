@@ -261,6 +261,25 @@ export default function Meny() {
 function CategoryCard({ category, catKey, itemIds, onAdd }) {
     const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category
 
+    const rateProduct = async (productId, val) => {
+        if (!productId) { alert('Produkten saknar id för betyg.'); return; }
+        try {
+            const res = await fetch(`http://localhost:5000/api/products/${productId}/rate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rating: val })
+            });
+            if (res.ok) {
+                alert('Tack för ditt betyg!');
+            } else {
+                alert('Kunde inte spara betyg.');
+            }
+        } catch (err) {
+            console.error('Rate error', err);
+            alert('Fel vid anslutning.');
+        }
+    };
+
     return (
         <div className='pizza-category'>
             <div className="pizza-header">
@@ -290,6 +309,13 @@ function CategoryCard({ category, catKey, itemIds, onAdd }) {
                                             initialRating={avgRating} 
                                             initialCount={revCount} 
                                         />
+                                        <div className="btn-group ms-3" role="group" aria-label="rate-buttons">
+                                            {[1,2,3,4,5].map(i => (
+                                                <button key={i} type="button" className="btn btn-sm btn-outline-primary" onClick={() => rateProduct(id, i)}>
+                                                    {i}
+                                                </button>
+                                            ))}
+                                        </div>
                                         <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, {p1: price1, p2: price2, p3: price3})}>
                                             + Lägg till
                                         </button>
