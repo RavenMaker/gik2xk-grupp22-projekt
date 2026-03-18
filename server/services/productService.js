@@ -2,7 +2,7 @@ const { Product, Rating, Cart, CartRow } = require('../models');
 
 const productService = {
   // Hjälpmetod för att "städa" produktobjekt (Sida 9) 
-  _cleanProduct(product) {
+ _cleanProduct(product) {
     const plainProduct = product.get({ plain: true });
     const ratings = plainProduct.Ratings || [];
     const total = ratings.reduce((sum, r) => sum + r.rating, 0);
@@ -13,10 +13,12 @@ const productService = {
       category: plainProduct.category,
       title: plainProduct.title,
       description: plainProduct.description,
-      price: plainProduct.price,
+      price1: plainProduct.price1,
+      price2: plainProduct.price2,
+      price3: plainProduct.price3,
       image_url: plainProduct.image_url,
-      averageRating: average.toFixed(1),
-      ratings: ratings
+      averageRating: average.toFixed(1), // Genomsnittet (t.ex. 4.5)
+      reviewCount: ratings.length        // ANTAL personer som röstat
     };
   },
 
@@ -31,34 +33,52 @@ const productService = {
     return this._cleanProduct(product);
   },
 
-  // By request: return menu shaped like the client's `fallbackData` structure
   async getMenu() {
-    const products = await Product.findAll();
+    // VIKTIGT: Lägg till include: [Rating] här så vi får med betygen från start
+    const products = await Product.findAll({ include: [Rating] }); 
     const plain = products.map(p => (p.get ? p.get({ plain: true }) : p));
 
     const grouped = {};
     plain.forEach(p => {
-      const cat = (p.category || 'Övrigt').toString();//det ska ändras med produkt läggning//
+      const cat = (p.category || 'Övrigt').toString();
       if (!grouped[cat]) grouped[cat] = [];
       grouped[cat].push(p);
     });
 
     const out = {};
-    let idx = 1;
+    let catCounter = 1;
+
     Object.entries(grouped).forEach(([catName, items]) => {
+      const masterInfo = items.find(it => it.title?.trim().toLowerCase() === "kategori info") || items[0];
       const itemlist = {};
-      items.forEach((it, i) => {
-        itemlist[`item${i + 1}`] = [it.title, it.description || ''];
+      let itemCounter = 1;
+
+      items.forEach((it) => {
+        const isInfoRow = it.title?.trim().toLowerCase() === "kategori info";
+        if (!isInfoRow) {
+          // Räkna ut snitt och antal för just denna produkt
+          const ratings = it.Ratings || [];
+          const avg = ratings.length > 0 ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length : 0;
+
+          // Skicka med: [namn, beskrivning, id, snittbetyg, antal]
+          itemlist[`item${itemCounter++}`] = [
+            it.title.trim(), 
+            it.description || '', 
+            it.id, 
+            avg.toFixed(1), 
+            ratings.length
+          ];
+        }
       });
 
-      out[`Category${idx++}`] = [
-        catName.toLowerCase(),
+      out[`Category${catCounter++}`] = [
+        (masterInfo.description || catName).toLowerCase().trim(),
         catName,
         {
-          price1: items[0] ? items[0].price : 0,
-          price2: 0,
-          price3: 0,
-          imageClass: items[0] ? items[0].image_url : '',
+          price1: masterInfo.price1 || 0,
+          price2: masterInfo.price2 || 0,
+          price3: masterInfo.price3 || 0,
+          imageClass: masterInfo.image_url || '',
           itemlist
         }
       ];
@@ -68,11 +88,19 @@ const productService = {
   },
 
   async addRating(productId, ratingValue) {
-    return await Rating.create({
-      product_id: productId,
-      rating: ratingValue
-    });
-  },
+  // Vi tvingar fram siffror för att vara säkra
+  const pId = parseInt(productId);
+  const val = parseFloat(ratingValue);
+
+  if (isNaN(pId) || isNaN(val)) {
+    throw new Error("Invalid ID or Rating value");
+  }
+
+  return await Rating.create({
+    product_id: pId,
+    rating: val
+  });
+},
 
   // NY: Logik för att lägga produkt i varukorg (Sida 8) [cite: 216, 219]
   async addProductToCart(userId, productId, amount) {

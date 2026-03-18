@@ -3,46 +3,7 @@ const router = express.Router();
 const productService = require('../services/productService');
 
 // Extra: return menu-shaped data matching client's fallbackData structure
-router.get('/menu', async (req, res) => {
-  try {
-    const products = await productService.getAllProducts();
 
-    // Group products by category
-    const grouped = {};
-    products.forEach(p => {
-      const cat = (p.category || 'Övrigt').toString();
-      if (!grouped[cat]) grouped[cat] = { items: [], image: p.image_url || '' };
-      grouped[cat].items.push(p);
-      if (!grouped[cat].image && p.image_url) grouped[cat].image = p.image_url;
-    });
-
-    // Build fallback-like object
-    const out = {};
-    let i = 1;
-    Object.entries(grouped).forEach(([catName, info]) => {
-      const itemlist = {};
-      info.items.forEach((it, idx) => {
-        itemlist[`item${idx + 1}`] = [it.title, it.description || ''];
-      });
-
-      out[`Category${i++}`] = [
-        catName.toLowerCase(),
-        catName,
-        {
-          price1: info.items[0] ? info.items[0].price1 : 0,
-          price2: info.items[0] ? info.items[0].price2 : 0,
-          price3: info.items[0] ? info.items[0].price3 : 0,
-          imageClass: info.image || '',
-          itemlist
-        }
-      ];
-    });
-
-    res.json(out);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
 // 1. Hämta alla produkter
 router.get('/', async (req, res) => {
@@ -79,16 +40,13 @@ router.get('/:id', async (req, res) => {
 // Krav sida 5: "Gränssnitt för att betygsätta en produkt"
 router.post('/:id/rate', async (req, res) => {
   try {
-    const productId = req.params.id;
     const { rating } = req.body;
-
-    if (!rating || rating < 1 || rating > 5) {
-      return res.status(400).json({ message: "Betyget måste vara mellan 1 och 5." });
-    }
-
+    const productId = req.params.id;
+    
     const newRating = await productService.addRating(productId, rating);
     res.status(201).json(newRating);
   } catch (error) {
+    console.error("Route Error:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -133,6 +91,17 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-
+// Uppdatera produkt (Admin)
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedProduct = await productService.updateProduct(req.params.id, req.body);
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Produkten hittades inte." });
+    }
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 module.exports = router;

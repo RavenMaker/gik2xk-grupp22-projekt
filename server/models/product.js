@@ -7,9 +7,17 @@ module.exports = (sequelize, DataTypes) => {
     description: { 
       type: DataTypes.TEXT 
     },
-    price: { 
+    price1: { 
       type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
-      allowNull: false 
+      allowNull: true 
+    },
+    price2: { 
+      type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
+      allowNull: true 
+    },
+    price3: { 
+      type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
+      allowNull: true 
     },
     image_url: { 
       type: DataTypes.STRING 

@@ -29,6 +29,14 @@ body {
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
+.star-rating {
+    display: inline-block;
+    white-space: nowrap;
+}
+.star-rating span {
+    transition: color 0.2s;
+}
+
 
 .menu-all {
   display: flex;

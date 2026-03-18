@@ -1,52 +1,131 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Admin = () => {
   const [menuData, setMenuData] = useState({});
+  const [rawProducts, setRawProducts] = useState([]);
   const [message, setMessage] = useState('');
+  const [editTarget, setEditTarget] = useState(null);
 
-  // Formulär för Kategori & Prisklass
-  const [catForm, setCatForm] = useState({ name: '', title: '', p1: '', p2: '', p3: '', img: '' });
-
-  // Formulär för Produkt
+  const [catForm, setCatForm] = useState({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
   const [prodForm, setProdForm] = useState({ selectedName: '', selectedTitle: '', title: '', desc: '' });
 
-  // --- 1. SKAPA KATEGORI (Auto-ID) ---
-  const saveCategory = (e) => {
-    e.preventDefault();
-    const nextId = `Category${Object.keys(menuData).length + 1}`;
-    
-    setMenuData({
-      ...menuData,
-      [nextId]: [
-        catForm.name, 
-        catForm.title, 
-        { price1: catForm.p1, price2: catForm.p2, price3: catForm.p3, imageClass: catForm.img, itemlist: {} }
-      ]
-    });
-    setMessage(`Kategorin "${catForm.title}" skapad!`);
-    setCatForm({ name: '', title: '', p1: '', p2: '', p3: '', img: '' });
-  };
+  const API_URL = 'http://localhost:5000/api/products';
 
-  // --- 2. LÄGG TILL PRODUKT (Hittar rätt koppling dynamiskt) ---
-  const saveProduct = (e) => {
-    e.preventDefault();
-    const targetKey = Object.keys(menuData).find(
-      k => menuData[k][0] === prodForm.selectedName && menuData[k][1] === prodForm.selectedTitle
-    );
-
-    if (targetKey) {
-      const newMenu = { ...menuData };
-      const items = newMenu[targetKey][2].itemlist;
-      const nextItemKey = `item${Object.keys(items).length + 1}`;
-      
-      items[nextItemKey] = [prodForm.title, prodForm.desc];
-      setMenuData(newMenu);
-      setMessage(`"${prodForm.title}" tillagd under ${prodForm.selectedTitle}`);
-      setProdForm({ ...prodForm, title: '', desc: '' });
+  const fetchData = async () => {
+    try {
+      const [menuRes, prodRes] = await Promise.all([
+        fetch(`${API_URL}/menu`),
+        fetch(API_URL)
+      ]);
+      setMenuData(await menuRes.json());
+      setRawProducts(await prodRes.json());
+    } catch (err) { 
+      console.error("Fel vid hämtning:", err); 
+      setMessage("Kunde inte hämta menydata.");
     }
   };
 
-  // Hjälpfunktioner för dynamiska listor
+  useEffect(() => { fetchData(); }, []);
+
+  const handleEditCategory = (catName, catTitle) => {
+    const catInfo = rawProducts.find(p => p.title === "Kategori Info" && p.category === catTitle);
+    if (catInfo) {
+      setEditTarget(catInfo);
+      setCatForm({
+        name: catName,
+        title: catTitle,
+        p1: catInfo.price1,
+        p2: catInfo.price2,
+        p3: catInfo.price3,
+        img: catInfo.image_url
+      });
+      new window.bootstrap.Modal(document.getElementById('catModal')).show();
+    }
+  };
+
+    const handleSave = async (type, data) => {
+      const isUpdate = !!editTarget;
+      const url = isUpdate ? `${API_URL}/${editTarget.id}` : API_URL;
+      const method = isUpdate ? 'PUT' : 'POST';
+
+      let payload = {};
+      
+      if (type === 'category') {
+        // 1 & 2: Här använder vi data.name (Huvudkategori) dynamiskt 
+        // och sätter titeln till "Kategori Info" så att systemet fattar att det är en inställningsrad
+        payload = {
+          category: data.title,       // T.ex. "Klass 1"
+          title: "Kategori Info",      // Markör för att det är en kategorinställning
+          description: data.name,     // Huvudkategori (t.ex. "Pizzor") - NU DYNAMISK
+          price1: Number(data.p1) || 0,
+          price2: Number(data.p2) || 0,
+          price3: Number(data.p3) || 0,
+          image_url: data.img
+        };
+      } else {
+        // För vanliga produkter
+        const catPrices = getPricesFromCat(data.selectedName, data.selectedTitle);
+        payload = {
+          category: data.selectedTitle,
+          title: data.title,
+          description: data.desc,
+          price1: catPrices.price1,
+          price2: catPrices.price2,
+          price3: catPrices.price3,
+          image_url: catPrices.image_url
+        };
+      }
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        if (res.ok) {
+          setMessage('Sparat!');
+          closeModals();
+          fetchData(); // Uppdatera listan direkt
+        }
+      } catch (err) { 
+        setMessage('Ett fel uppstod vid sparning.'); 
+      }
+    };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Radera produkt?")) return;
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (res.ok) fetchData();
+    } catch (err) { setMessage('Kunde inte radera.'); }
+  };
+
+  const handleDeleteCategory = async (catName, catTitle) => {
+    const productsToDelete = rawProducts.filter(p => p.category === catTitle);
+    if (window.confirm(`Radera hela prisklassen "${catTitle}"?`)) {
+      await Promise.all(productsToDelete.map(p => fetch(`${API_URL}/${p.id}`, { method: 'DELETE' })));
+      fetchData();
+    }
+  };
+
+  const closeModals = () => {
+    setEditTarget(null);
+    setCatForm({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
+    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '' });
+    document.querySelectorAll('.modal').forEach(el => {
+      const m = window.bootstrap.Modal.getInstance(el);
+      if (m) m.hide();
+    });
+  };
+
+  const getPricesFromCat = (name, title) => {
+    const cat = Object.values(menuData).find(c => c[0] === name && c[1] === title);
+    return cat ? { 
+      price1: cat[2].price1, price2: cat[2].price2, price3: cat[2].price3, image_url: cat[2].imageClass
+    } : { price1: 0, price2: 0, price3: 0, image_url: '' };
+  };
+
   const uniqueNames = [...new Set(Object.values(menuData).map(v => v[0]))];
   const filteredTitles = Object.values(menuData)
     .filter(v => v[0] === prodForm.selectedName)
@@ -54,50 +133,129 @@ const Admin = () => {
 
   return (
     <div className="container mt-5 pb-5">
-      <h2 className="mb-4">Admin</h2>
-      {message && <div className="alert alert-success">{message}</div>}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>Meny Administration</h2>
+        <div>
+          <button className="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#catModal" onClick={() => setEditTarget(null)}>+ Ny Prisklass</button>
+          <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prodModal" onClick={() => setEditTarget(null)}>+ Ny Produkt</button>
+        </div>
+      </div>
 
-      <div className="row g-4">
-        {/* FORM 1: KATEGORI & PRISKLASS */}
-        <div className="col-md-5">
-          <div className="card p-4 shadow-sm bg-light border-0">
-            <h5 className="mb-3">1. Skapa Kategori & Prisklass</h5>
-            <form onSubmit={saveCategory}>
-              <input type="text" className="form-control mb-2" placeholder="Huvudkategori (t.ex. Pizza)" value={catForm.name} onChange={e => setCatForm({...catForm, name: e.target.value})} required />
-              <input type="text" className="form-control mb-2" placeholder="Prisklass/Titel (t.ex. Pizza Klass 1)" value={catForm.title} onChange={e => setCatForm({...catForm, title: e.target.value})} required />
-              <div className="row g-2 mb-2">
-                <div className="col"><input type="number" className="form-control" placeholder="Pris 1" value={catForm.p1} onChange={e => setCatForm({...catForm, p1: e.target.value})} /></div>
-                <div className="col"><input type="number" className="form-control" placeholder="Pris 2" value={catForm.p2} onChange={e => setCatForm({...catForm, p2: e.target.value})} /></div>
-                <div className="col"><input type="number" className="form-control" placeholder="Pris 3" value={catForm.p3} onChange={e => setCatForm({...catForm, p3: e.target.value})} /></div>
+      <div className="row">
+        {Object.entries(menuData).map(([id, val]) => (
+          <div key={id} className="col-md-6 mb-4">
+            <div className="card shadow-sm border-0 h-100">
+              <div className="card-header d-flex justify-content-between align-items-center bg-light border-bottom-0 pt-3">
+                <div>
+                  <h5 className="mb-0 fw-bold">{val[1]}</h5>
+                  <small className="text-muted text-uppercase" style={{fontSize: '0.7rem'}}>
+                    Filter: <strong>{val[0]}</strong> | {val[2].price1}:- / {val[2].price2}:- / {val[2].price3}:-
+                  </small>
+                </div>
+                <div className="btn-group">
+                  <button className="btn btn-sm btn-outline-primary" onClick={() => handleEditCategory(val[0], val[1])}>Ändra</button>
+                  <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteCategory(val[0], val[1])}>Radera</button>
+                </div>
               </div>
-              <input type="text" className="form-control mb-3" placeholder="Bild-sökväg" value={catForm.img} onChange={e => setCatForm({...catForm, img: e.target.value})} />
-              <button className="btn btn-dark w-100 fw-bold">Spara Kategori</button>
+              <ul className="list-group list-group-flush p-2">
+                {Object.entries(val[2].itemlist).map(([itemKey, item]) => {
+                  
+                  // LÄGG TILL DENNA RAD HÄR:
+                  if (item[0] === "Kategori Info") return null; 
+
+                  const realProd = rawProducts.find(p => 
+                    p.title?.trim().toLowerCase() === item[0]?.trim().toLowerCase() && 
+                    p.category?.trim().toLowerCase() === val[1]?.trim().toLowerCase()
+                  );
+                  if (!realProd) return null;
+
+                  return (
+                    <li key={itemKey} className="list-group-item d-flex justify-content-between align-items-center border-0 rounded mb-1 bg-white shadow-sm">
+                      <div>
+                        <div className="fw-bold">{item[0]}</div>
+                        <div className="small text-muted">{item[1]}</div>
+                      </div>
+                      <div className="d-flex">
+                        <button className="btn btn-sm text-primary me-1" onClick={() => {
+                          setEditTarget(realProd);
+                          setProdForm({ 
+                            selectedName: val[0], 
+                            selectedTitle: realProd.category, 
+                            title: realProd.title, 
+                            desc: realProd.description 
+                          });
+                          new window.bootstrap.Modal(document.getElementById('prodModal')).show();
+                        }}>Redigera</button>
+                        <button className="btn btn-sm btn-danger rounded-circle" onClick={() => handleDelete(realProd.id)}>&times;</button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* MODAL KATEGORI */}
+      <div className="modal fade" id="catModal" tabIndex="-1" data-bs-backdrop="static">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header bg-dark text-white">
+              <h5 className="modal-title">{editTarget ? 'Ändra Prisklass' : 'Ny Prisklass'}</h5>
+              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" onClick={closeModals}></button>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); handleSave('category', catForm); }}>
+              <div className="modal-body p-4">
+                <label className="small fw-bold">Huvudkategori (Sökfilter)</label>
+                <input type="text" className="form-control mb-3" value={catForm.name} onChange={e => setCatForm({...catForm, name: e.target.value})} required />
+                <label className="small fw-bold">Display-titel (Prisklassens namn)</label>
+                <input type="text" className="form-control mb-3" value={catForm.title} onChange={e => setCatForm({...catForm, title: e.target.value})} required />
+                <label className="small fw-bold">Priser (kr)</label>
+                <div className="row g-2 mb-3">
+                  <div className="col"><small>Avhämtning</small><input type="number" className="form-control" value={catForm.p1} onChange={e => setCatForm({...catForm, p1: e.target.value})} required /></div>
+                  <div className="col"><small>Servering</small><input type="number" className="form-control" value={catForm.p2} onChange={e => setCatForm({...catForm, p2: e.target.value})} /></div>
+                  <div className="col"><small>Familj</small><input type="number" className="form-control" value={catForm.p3} onChange={e => setCatForm({...catForm, p3: e.target.value})} /></div>
+                </div>
+                <label className="small fw-bold">Bild-URL</label>
+                <input type="text" className="form-control" value={catForm.img} onChange={e => setCatForm({...catForm, img: e.target.value})} />
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeModals}>Avbryt</button>
+                <button type="submit" className="btn btn-dark">Spara</button>
+              </div>
             </form>
           </div>
         </div>
+      </div>
 
-        {/* FORM 2: PRODUKT */}
-        <div className="col-md-7">
-          <div className="card p-4 shadow-sm border-0">
-            <h5 className="mb-3">2. Lägg till Produkt</h5>
-            <form onSubmit={saveProduct}>
-              <div className="row mb-2">
-                <div className="col-md-6">
-                  <select className="form-select" value={prodForm.selectedName} onChange={e => setProdForm({...prodForm, selectedName: e.target.value, selectedTitle: ''})} required>
-                    <option value="">Välj Kategori...</option>
-                    {uniqueNames.map(n => <option key={n} value={n}>{n}</option>)}
-                  </select>
-                </div>
-                <div className="col-md-6">
-                  <select className="form-select" value={prodForm.selectedTitle} onChange={e => setProdForm({...prodForm, selectedTitle: e.target.value})} disabled={!prodForm.selectedName} required>
-                    <option value="">Välj Prisklass...</option>
-                    {filteredTitles.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
+      {/* MODAL PRODUKT */}
+      <div className="modal fade" id="prodModal" tabIndex="-1" data-bs-backdrop="static">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header bg-primary text-white">
+              <h5 className="modal-title">{editTarget ? 'Redigera Produkt' : 'Ny Produkt'}</h5>
+              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" onClick={closeModals}></button>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); handleSave('product', prodForm); }}>
+              <div className="modal-body p-4">
+                <label className="small fw-bold">Huvudkategori</label>
+                <select className="form-select mb-3" value={prodForm.selectedName} onChange={e => setProdForm({...prodForm, selectedName: e.target.value, selectedTitle: ''})} required>
+                  <option value="">-- Välj --</option>
+                  {uniqueNames.map(n => <option key={n} value={n}>{n}</option>)}
+                </select>
+                <label className="small fw-bold">Prisklass</label>
+                <select className="form-select mb-3" value={prodForm.selectedTitle} onChange={e => setProdForm({...prodForm, selectedTitle: e.target.value})} disabled={!prodForm.selectedName} required>
+                  <option value="">-- Välj --</option>
+                  {filteredTitles.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+                <input type="text" className="form-control mb-3" placeholder="Namn" value={prodForm.title} onChange={e => setProdForm({...prodForm, title: e.target.value})} required />
+                <textarea className="form-control" rows="3" placeholder="Beskrivning" value={prodForm.desc} onChange={e => setProdForm({...prodForm, desc: e.target.value})} />
               </div>
-              <input type="text" className="form-control mb-2" placeholder="Produktens namn" value={prodForm.title} onChange={e => setProdForm({...prodForm, title: e.target.value})} required />
-              <textarea className="form-control mb-3" placeholder="Ingredienser" value={prodForm.desc} onChange={e => setProdForm({...prodForm, desc: e.target.value})} />
-              <button className="btn btn-primary w-100 fw-bold" disabled={!prodForm.selectedTitle}>Spara Produkt</button>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeModals}>Avbryt</button>
+                <button type="submit" className="btn btn-primary">Spara</button>
+              </div>
             </form>
           </div>
         </div>

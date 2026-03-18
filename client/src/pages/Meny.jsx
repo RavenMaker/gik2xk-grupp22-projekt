@@ -66,6 +66,52 @@ const fallbackData = {
 
 };
 
+function ProductRating({ productId, initialRating, initialCount }) {
+    const [rating, setRating] = useState(parseFloat(initialRating) || 0);
+    const [count, setCount] = useState(parseInt(initialCount) || 0);
+    const [hover, setHover] = useState(0);
+
+    // Om initialRating ändras (t.ex. vid refresh), uppdatera state
+    useEffect(() => {
+        setRating(parseFloat(initialRating) || 0);
+        setCount(parseInt(initialCount) || 0);
+    }, [initialRating, initialCount]);
+
+    const saveRating = async (val) => {
+        const res = await fetch(`http://localhost:5000/api/products/${productId}/rate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rating: val })
+        });
+        if (res.ok) {
+            setCount(c => c + 1);
+            alert("Tack!");
+        }
+    };
+
+    return (
+        <div className="d-flex align-items-center">
+            {[1, 2, 3, 4, 5].map((i) => {
+                const activeVal = hover || rating;
+                let fill = 0;
+                if (activeVal >= i) fill = 100;
+                else if (activeVal > i - 1) fill = (activeVal - (i - 1)) * 100;
+
+                return (
+                    <span key={i} onClick={() => saveRating(i)} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(0)}
+                          style={{ position: 'relative', cursor: 'pointer', fontSize: '1.2rem', color: '#ccc' }}>
+                        <span>★</span>
+                        <span style={{
+                            position: 'absolute', top: 0, left: 0, width: `${fill}%`,
+                            overflow: 'hidden', color: '#ffc107'
+                        }}>★</span>
+                    </span>
+                );
+            })}
+            <span className="ms-2 small text-muted">({count})</span>
+        </div>
+    );
+}
 
 export default function Meny() {
     const [valdKategori, setValdKategori] = useState("")
@@ -178,9 +224,18 @@ function CategoryCard({category, catKey, itemIds }) {
                 </div>
                 <div className="col-md-8">
                     <ol className="pizza-list">
-                        {Object.entries(itemlist).map(([itemKey, [namn, beskrivning]]) => (
-                            <li key={itemKey} className="Pizza-discription">
-                                <strong>{itemIds[`${catKey}-${itemKey}`]}. {namn}</strong> – {beskrivning}
+                       {Object.entries(itemlist).map(([itemKey, [namn, beskrivning, id, avgRating, revCount]]) => (
+                            <li key={itemKey} className="Pizza-discription mb-3">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div style={{ flex: 1 }}>
+                                        <strong>{namn}</strong> – {beskrivning}
+                                    </div>
+                                    <ProductRating 
+                                        productId={id} 
+                                        initialRating={avgRating} 
+                                        initialCount={revCount} 
+                                    />
+                                </div>
                             </li>
                         ))}
                     </ol>
