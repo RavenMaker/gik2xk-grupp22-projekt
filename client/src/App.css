@@ -251,6 +251,12 @@
 .lunch-list li::marker {
   display: none;
 }
+.lunch-page {
+  min-height:100vh;
+  background:url("/imges/wood.webp") center/cover no-repeat;
+  padding:60px 30px;
+  text-align:center;
+}
 .row menu {
   background:url("/imges/wood.webp") center/cover no-repeat;
   display: flex;
