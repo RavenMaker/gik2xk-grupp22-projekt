@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Menu from './pages/Meny.jsx'
+import Lunch from './pages/Lunch.jsx'
 import Singin from './pages/Singin.jsx'
 import Admin from './pages/Admin.jsx'
 import './App.css'
@@ -32,6 +33,7 @@ function App() {
             <Route path="/"        element={<Home />} />
             <Route path="/about"   element={<About />} />
             <Route path="/menu"   element={<Menu />} />
+            <Route path="/lunch"   element={<Lunch />} />
             <Route path="/singIn"   element={<Singin />} />
             <Route path="/admin"   element={<Admin />} />
           </Routes>

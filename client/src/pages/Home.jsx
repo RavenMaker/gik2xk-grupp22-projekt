@@ -13,7 +13,7 @@ export default function Home() {
         </div>
         <div className="hero-buttons">
          <Link to="/menu" className="hero-btn">Meny</Link>
-         <Link to="/lunch meny" className="hero-btn">Lunch</Link>
+         <Link to="/lunch" className="hero-btn">Lunch</Link>
         </div>
 
         <div className="logo-wrapper">
