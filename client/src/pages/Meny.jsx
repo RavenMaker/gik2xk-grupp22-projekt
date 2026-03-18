@@ -6,7 +6,7 @@ const topCategories = [
     { href: "kebabratter",  img: "https://cdn-icons-png.flaticon.com/512/706/706893.png",   name: "Kebabrätter" },
     { href: "alacarte",     img: "https://cdn-icons-png.flaticon.com/512/11790/11790156.png", name: "À la carte" },
     { href: "rullar",       img: "https://cdn-icons-png.flaticon.com/512/8616/8616731.png", name: "Rullar" },
-    { href: "salad",     img: "https://cdn-icons-png.flaticon.com/512/2515/2515183.png", name: "vegetarian" },
+    { href: "salad",        img: "https://cdn-icons-png.flaticon.com/512/2515/2515183.png", name: "vegetarian" },
     { href: "husman",       img: "https://cdn-icons-png.flaticon.com/512/3480/3480823.png", name: "Husman" },
     { href: "pastaratter",  img: "https://cdn-icons-png.flaticon.com/512/4465/4465494.png", name: "Pastarätter" },
     { href: "dryck", img: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png", name: "Våra drycker" },
@@ -63,7 +63,6 @@ const fallbackData = {
                 item5:["Jordgubbsjuice", "En naturlig jordgubbsjuice med en fruktig smak. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."]
             }
         }]
-
 };
 
 function ProductRating({ productId, initialRating, initialCount }) {
@@ -71,7 +70,6 @@ function ProductRating({ productId, initialRating, initialCount }) {
     const [count, setCount] = useState(parseInt(initialCount) || 0);
     const [hover, setHover] = useState(0);
 
-    // Om initialRating ändras (t.ex. vid refresh), uppdatera state
     useEffect(() => {
         setRating(parseFloat(initialRating) || 0);
         setCount(parseInt(initialCount) || 0);
@@ -118,8 +116,10 @@ export default function Meny() {
     const [menuItem, setMenuItem] = useState({}) 
     const [loading, setLoading] = useState(true)  
     const [error, setError] = useState(null)
+    const [cart, setCart] = useState([])
+    const [showModal, setShowModal] = useState(false);
+    const [activeProduct, setActiveProduct] = useState(null);
 
-    // Hämta data när sidan laddas
     useEffect(() => {
         fetch("http://localhost:5000/api/products/menu")     
             .then(res => {
@@ -136,11 +136,26 @@ export default function Meny() {
                 setLoading(false)
                 setError(null)  
             })
-    }, []) // [] = kör bara en gång när sidan laddas
+    }, [])
 
-    const itemIds = {}
-    let idCounter = 1
+    const openPriceSelection = (productName, prices) => {
+        setActiveProduct({ name: productName, prices });
+        setShowModal(true);
+    };
+
+    const addToCart = (productName, type, price) => {
+        setCart([...cart, { name: `${productName} (${type})`, price: price, id: Date.now() }]);
+        setShowModal(false);
+    };
+
+    const removeFromCart = (id) => {
+        setCart(cart.filter(item => item.id !== id));
+    };
+
+    const itemIds = {};
+    let idCounter = 1;
     Object.entries(menuItem).forEach(([catKey, category]) => {
+<<<<<<< HEAD
         Object.keys(category[2].itemlist).forEach(itemKey => {
             itemIds[`${catKey}-${itemKey}`] = idCounter++
         })
@@ -181,62 +196,127 @@ export default function Meny() {
             .map(e => e.category)
         if (permissive.length > 0) visadeKategorier = permissive
     }
+=======
+        if (category[0] && category[0].toLowerCase() === "pizza") {
+            Object.keys(category[2].itemlist).forEach(itemKey => {
+                itemIds[`${catKey}-${itemKey}`] = idCounter++;
+            });
+        }
+    });
+>>>>>>> 7be513198333ffa62541dceb04577b3863ecb791
 
-
-
-
-    // ── Visa laddning / fel / innehåll ──
     if (loading) return <p style={{ padding: '2rem' }}>Laddar meny...</p>
     if (error)   return <p style={{ padding: '2rem', color: 'red' }}>Fel: {error}</p>
 
     return (
+<<<<<<< HEAD
         <div className="menu-page">
             <h1 className="menu-title">Vår meny</h1>
             <div className="row menu">
+=======
+        <div>
+            {/* NAVBAR (Varukorg) - Från kod 1 */}
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+                <div className="container">
+                    <div className="dropdown ms-auto">
+                        <button className="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            Varukorg ({cart.length})
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end shadow p-2" style={{ minWidth: '280px' }}>
+                            {cart.length === 0 ? <li className="text-center p-2 text-muted">Tom</li> : (
+                                <>
+                                    {cart.map(item => (
+                                        <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom py-1 small">
+                                            <span>{item.name}</span>
+                                            <div>
+                                                <span className="me-2">{item.price}:-</span>
+                                                <button className="btn btn-sm text-danger p-0" onClick={() => removeFromCart(item.id)}>✖</button>
+                                            </div>
+                                        </li>
+                                    ))}
+                                    <li className="fw-bold pt-2 text-end">Totalt: {cart.reduce((s, i) => s + i.price, 0)}:-</li>
+                                </>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+>>>>>>> 7be513198333ffa62541dceb04577b3863ecb791
 
-                {topCategories.map((cat) => (
-                    <div key={cat.href} className="col-md-4 col-sm-6 menu-item text-center">
-                        <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori(cat.href) }}>
-                            <img className="menu-icon" src={cat.img} alt={cat.name} />
-                            <div className="menu-name">{cat.name}</div>
+            {/* Innehåll och Layout - Från kod 2 */}
+            <div className="lunch-page container mt-4">
+                <h1 className="menu-title">Vår meny</h1>
+                <div className="row menu">
+                    {topCategories.map((cat) => (
+                        <div key={cat.href} className="col-md-4 col-sm-6 menu-item text-center">
+                            <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori(cat.href) }}>
+                                <img className="menu-icon" src={cat.img} alt={cat.name} />
+                                <div className="menu-name">{cat.name}</div>
+                            </a>
+                        </div>
+                    ))}
+                    <div className="col-md-4 col-sm-6 menu-all text-center">
+                        <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
+                            <div className="menu-name">Visa alla</div>
                         </a>
                     </div>
+<<<<<<< HEAD
                 ))}
                 <div className="col-md-2 col-sm-7 menu-all text-center">
                     <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
                         <div className="menu-name">Visa alla</div>
                     </a>
+=======
+                </div>
+
+                {valdKategori && (
+                    <p style={{ margin: '1rem 0' }}>
+                        Filtrerar på: <strong>{valdKategori}</strong>
+                    </p>
+                )}
+
+                <div id="MenuList">
+                    {Object.entries(menuItem)
+                        .filter(([catKey, c]) => valdKategori === "" || c[0].toLowerCase() === valdKategori.toLowerCase())
+                        .map(([catKey, category], index) => (
+                            <CategoryCard 
+                                key={index} 
+                                category={category} 
+                                catKey={catKey} 
+                                itemIds={itemIds} 
+                                onAdd={openPriceSelection} 
+                            />
+                        ))}
+>>>>>>> 7be513198333ffa62541dceb04577b3863ecb791
                 </div>
             </div>
 
-            {valdKategori && (
-                <p style={{ margin: '1rem 0' }}>
-                    Filtrerar på: <strong>{valdKategori}</strong>
-                </p>
+            {/* MODAL FÖR PRISVAL - Från kod 1 */}
+            {showModal && activeProduct && (
+                <div className="modal show d-block" style={{background: 'rgba(0,0,0,0.5)'}}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Välj storlek: {activeProduct.name}</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="d-grid gap-2">
+                                    {activeProduct.prices.p1 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Avh.", activeProduct.prices.p1)}>Avhämtning ({activeProduct.prices.p1}:-)</button>}
+                                    {activeProduct.prices.p2 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Serv.", activeProduct.prices.p2)}>Servering ({activeProduct.prices.p2}:-)</button>}
+                                    {activeProduct.prices.p3 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Familj", activeProduct.prices.p3)}>Familjepizza ({activeProduct.prices.p3}:-)</button>}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
-
-            {/* Meny-kort */}
-            <div id="MenuList">
-                {visadeKategorier.length === 0 ? (
-                    <p>Inga rätter hittades i denna kategori.</p>
-                ) : (
-                    (() => {
-                        let counter = 1
-                        return visadeKategorier.map((category, index) => {
-                            const catKey = Object.keys(menuItem).find(k => menuItem[k] === category)
-                            return <CategoryCard key={index} category={category} catKey={catKey} itemIds={itemIds} />
-                        })
-                    })()
-                )}
-            </div>
         </div>
     )
 }
 
-
-
-function CategoryCard({category, catKey, itemIds }) {
-    const [urlName,title, { price1, price2, price3, imageClass, itemlist }] = category
+function CategoryCard({ category, catKey, itemIds, onAdd }) {
+    const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category
 
     return (
         <div className='pizza-category'>
@@ -255,17 +335,22 @@ function CategoryCard({category, catKey, itemIds }) {
                 </div>
                 <div className="col-md-8">
                     <ol className="pizza-list">
-                       {Object.entries(itemlist).map(([itemKey, [namn, beskrivning, id, avgRating, revCount]]) => (
+                        {Object.entries(itemlist).map(([itemKey, [namn, beskrivning, id, avgRating, revCount]]) => (
                             <li key={itemKey} className="Pizza-discription mb-3">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div style={{ flex: 1 }}>
-                                        <strong>{namn}</strong> – {beskrivning}
+                                        <strong>{itemIds[`${catKey}-${itemKey}`] ? `${itemIds[`${catKey}-${itemKey}`]}. ` : ""}{namn}</strong> – {beskrivning}
                                     </div>
-                                    <ProductRating 
-                                        productId={id} 
-                                        initialRating={avgRating} 
-                                        initialCount={revCount} 
-                                    />
+                                    <div className="d-flex align-items-center">
+                                        <ProductRating 
+                                            productId={id} 
+                                            initialRating={avgRating} 
+                                            initialCount={revCount} 
+                                        />
+                                        <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, {p1: price1, p2: price2, p3: price3})}>
+                                            + Lägg till
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
                         ))}
