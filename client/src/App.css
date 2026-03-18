@@ -230,9 +230,13 @@
 .lunch-page{
   min-height:100vh;
   background:url("/imges/wood.webp") center/cover no-repeat;
-  color:white;
   padding:60px 20px;
   text-align:center;
+}
+
+/* Ensure menu title is visible on wood background */
+.lunch-page .menu-title {
+  color: white;
 }
 
 /* Ta bort listpunkter på lunchsidan */
@@ -246,4 +250,11 @@
 }
 .lunch-list li::marker {
   display: none;
+}
+.row menu {
+  background:url("/imges/wood.webp") center/cover no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
 }

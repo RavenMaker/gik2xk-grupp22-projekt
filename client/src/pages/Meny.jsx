@@ -159,7 +159,7 @@ export default function Meny() {
     if (error)   return <p style={{ padding: '2rem', color: 'red' }}>Fel: {error}</p>
 
     return (
-        <div>
+        <div className="lunch-page">
             <h1 className="menu-title">Vår meny</h1>
             <div className="row menu">
 
