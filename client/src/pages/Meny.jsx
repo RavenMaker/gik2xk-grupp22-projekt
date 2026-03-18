@@ -195,7 +195,7 @@ export default function Meny() {
             </nav>
 
             {/* Innehåll och Layout - Från kod 2 */}
-            <div className="lunch-page container mt-4">
+            <div className="menu-page container mt-4">
                 <h1 className="menu-title">Vår meny</h1>
                 <div className="row menu">
                     {topCategories.map((cat) => (
