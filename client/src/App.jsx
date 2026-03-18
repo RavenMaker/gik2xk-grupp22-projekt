@@ -36,17 +36,27 @@ function App() {
             <Route path="/admin"   element={<Admin />} />
           </Routes>
 
-            <footer class="site-footer mt-5">
+            <footer class="site-footer">
               <div class="container">
                 <div class="row align-items-center text-center text-md-start">
                   <div class="col-md-6 mb-3 mb-md-0">
                     <h5 class="footer-title mb-2">Z krog Restaurang</h5>
                     <p class="mb-0 footer-text">God mat, snabb service och en meny för hela familjen</p>
+                    <p class="footer-phone">📞 023-344 41</p>
+                    <li> 
+                         <a 
+                           href="https://facebook.com" 
+                           target="_blank" 
+                            className="footer-link"
+                            >
+                            <i className="fa-brands fa-facebook"></i> Facebook
+                          </a>
+                       </li>
                   </div>
+
                   <div class="col-md-6">
                     <ul class="footer-links list-unstyled d-flex flex-column flex-md-row justify-content-center justify-content-md-end gap-3 mb-0">
                       <li><Link to="/about" class="footer-link">Om oss</Link></li>
-                      <li><Link to="/contact" class="footer-link">Kontakt</Link></li>
                       <li><Link class="nav-link" to="/singIn">Admin login</Link></li>
                     </ul>
                   </div>
