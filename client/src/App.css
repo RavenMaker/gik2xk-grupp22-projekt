@@ -1,3 +1,23 @@
+.custom-navbar {
+  background: linear-gradient(135deg, #ff7a00, #ff9a2f);
+}
+
+/* Text färg */
+.custom-navbar .navbar-brand {
+  color: #fff;
+  font-weight: 800;
+}
+
+.custom-navbar .nav-link {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Hover effekt */
+.custom-navbar .nav-link:hover {
+  color: #000;
+}
+
 .hero-content {
   min-height: 100vh;
   background: url("/imges/wood.webp") center/cover no-repeat;
@@ -263,4 +283,86 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
+}
+/* Titel */
+.lunch-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Beskrivningstext */
+.lunch-text {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 40px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.lunch-list {
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  padding: 30px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.lunch-list section {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  margin-bottom: 25px;
+}
+/* Hover effekt */
+.lunch-list section:hover {
+  transform: translateY(-5px);
+}
+
+/* Dag titel */
+.lunch-list h3 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  border-bottom: 3px solid #ff7a00;
+  padding-bottom: 8px;
+}
+
+/* Maträtter */
+.lunch-list li {
+  background: #eee6db;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border-left: 5px solid #ff7a00;
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+/* Knappar */
+.lunch-page button {
+  background: #ff7a00;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover på knappar */
+.lunch-page button:hover {
+  background: #e56700;
+  transform: translateY(-2px);
+}
+
+/* Inputfält */
+.lunch-page input {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
 }

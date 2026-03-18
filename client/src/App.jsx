@@ -12,7 +12,7 @@ function App() {
     <>
       <BrowserRouter>
           {/* Navbar som alltid syns */}
-          <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+          <nav className="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm">
             <div className="container">
               <Link className="navbar-brand fw-bold" to="/">Z krog Restaurang</Link>
               <div className="collapse navbar-collapse" id="navMenu">
