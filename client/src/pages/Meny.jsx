@@ -145,11 +145,42 @@ export default function Meny() {
             itemIds[`${catKey}-${itemKey}`] = idCounter++
         })
     })
-    // Filtrera kategorier
-    const visadeKategorier = Object.values(menuItem).filter(category => {
-        if (valdKategori === "") return true
-        return category[0].toLowerCase() === valdKategori.toLowerCase()
-    })
+    // Filtrera kategorier robustare genom att använda objektets entries (nyckel + kategori)
+    const normalize = (s) => {
+        if (!s) return ""
+        try {
+            return s.toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+        } catch (e) {
+            return s.toString().toLowerCase()
+        }
+    }
+    const keyify = (s) => normalize(s).replace(/[^a-z0-9]/g, '')
+
+    const categoryEntries = Object.entries(menuItem).map(([key, category]) => ({ key, category }))
+
+    let visadeKategorier = categoryEntries
+        .filter(({ key, category }) => {
+            if (valdKategori === "") return true
+            const valKey = keyify(valdKategori)
+            const urlName = category[0] || ''
+            const title = category[1] || ''
+            const urlNameKey = keyify(urlName)
+            const titleKey = keyify(title)
+            // Jämför mot href (valKey) mot urlName/title eller objektens key
+            return valKey === urlNameKey || valKey === titleKey || valKey === keyify(key)
+        })
+        .map(e => e.category)
+
+    // Fallback: om ingen match hittades, försök permissiv match mot sammansatt text
+    if (valdKategori !== '' && visadeKategorier.length === 0) {
+        const permissive = categoryEntries
+            .filter(({ category }) => {
+                const combined = normalize(String(category[0] || '') + ' ' + String(category[1] || ''))
+                return combined.includes(normalize(valdKategori))
+            })
+            .map(e => e.category)
+        if (permissive.length > 0) visadeKategorier = permissive
+    }
 
 
 
@@ -159,7 +190,7 @@ export default function Meny() {
     if (error)   return <p style={{ padding: '2rem', color: 'red' }}>Fel: {error}</p>
 
     return (
-        <div className="lunch-page">
+        <div className="menu-page">
             <h1 className="menu-title">Vår meny</h1>
             <div className="row menu">
 
@@ -171,7 +202,7 @@ export default function Meny() {
                         </a>
                     </div>
                 ))}
-                <div className="col-md-4 col-sm-6 menu-all text-center">
+                <div className="col-md-2 col-sm-7 menu-all text-center">
                     <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
                         <div className="menu-name">Visa alla</div>
                     </a>
