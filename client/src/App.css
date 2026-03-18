@@ -234,3 +234,16 @@
   padding:60px 20px;
   text-align:center;
 }
+
+/* Ta bort listpunkter på lunchsidan */
+.lunch-list ul {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+.lunch-list li {
+  margin-bottom: 8px;
+}
+.lunch-list li::marker {
+  display: none;
+}
