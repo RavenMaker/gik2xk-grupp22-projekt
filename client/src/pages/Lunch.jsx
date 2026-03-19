@@ -16,6 +16,14 @@ export default function Meny() {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
+    // 1. Kolla om URL:en innehåller ?mode=edit (skickas från Admin.jsx)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('edit') === 'true') {
+      setIsAdmin(true);
+      setEditMode(true);
+    }
+
+    // 2. Hämta sparad meny från localStorage
     try {
       const saved = localStorage.getItem("lunchMenu");
       if (saved) setMenu(JSON.parse(saved));
@@ -40,88 +48,75 @@ export default function Meny() {
     try {
       localStorage.setItem("lunchMenu", JSON.stringify(menu));
       setEditMode(false);
-      alert("Meny sparad.");
+      alert("Lunchmenyn har sparats!");
     } catch (e) {
-      console.error("Could not save lunch menu:", e);
-      alert("Det gick inte att spara menyn.");
+      alert("Det gick inte att spara.");
     }
   };
 
   const resetMenu = () => {
-    if (!confirm("Återställ till standardmeny?")) return;
+    if (!confirm("Vill du återställa till standardmenyn?")) return;
     setMenu(defaultMenu);
     localStorage.setItem("lunchMenu", JSON.stringify(defaultMenu));
-  };
-
-  const handleAdminLogin = () => {
-    const pw = prompt("Adminlösenord:");
-    if (pw === "admin123") {
-      setIsAdmin(true);
-      alert("Inloggad som admin.");
-    } else {
-      alert("Fel lösenord.");
-    }
-  };
-
-  const handleAdminLogout = () => {
-    setIsAdmin(false);
-    setEditMode(false);
   };
 
   return (
     <div className="lunch-page">
       <h1 className="lunch-title">Lunchmeny</h1>
-
       <p className="lunch-text">Vår lunchmeny serveras måndag till fredag mellan kl. 11:00 och 14:00.</p>
-
-      
-
+      {/* ADMIN-PANEL: Syns endast för inloggade admins */}
+      {isAdmin && (
+        <div className="mt-5 p-4 border-top bg-white shadow-sm rounded admin-Panel">
+          <h5 className="mb-3">Administratörsverktyg</h5>
+          <div className="d-flex gap-2 flex-wrap">
+            <button className="btn btn-primary" onClick={() => setEditMode(!editMode)}>
+              {editMode ? "Visa som kund" : "Redigera rätter"}
+            </button>
+            
+            {editMode && (
+              <button className="btn btn-success" onClick={saveMenu}>Spara ändringar</button>
+            )}
+            
+            <button className="btn btn-outline-warning" onClick={resetMenu}>Återställ standard</button>
+            
+            {/* TILLBAKA TILL ADMIN-PANELEN */}
+            <button className="btn btn-dark ms-auto" onClick={() => window.location.href = '/admin'}>
+              ← Tillbaka till Admin-panelen
+            </button>
+          </div>
+        </div>
+      )}
       <div className="lunch-list">
         {weekdays.map(day => (
-          <section key={day} style={{ marginBottom: 18 }}>
+          <section key={day} className="mb-4">
             <h3 style={{ color: "#0b57a4" }}>{day}.</h3>
             {editMode && isAdmin ? (
-              <div>
+              <div className="p-3 border rounded bg-light">
                 {menu[day].map((dish, idx) => (
-                  <div key={idx} style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+                  <div key={idx} className="d-flex gap-2 mb-2">
                     <input
                       type="text"
+                      className="form-control"
                       value={dish}
                       onChange={e => handleDishChange(day, idx, e.target.value)}
-                      style={{ flex: 1 }}
                     />
-                    <button onClick={() => removeDish(day, idx)}>Ta bort</button>
+                    <button className="btn btn-outline-danger btn-sm" onClick={() => removeDish(day, idx)}>Ta bort</button>
                   </div>
                 ))}
-                <button onClick={() => addDish(day)}>Lägg till rätt</button>
+                <button className="btn btn-sm btn-outline-primary" onClick={() => addDish(day)}>+ Lägg till rätt</button>
               </div>
             ) : (
-              <ul>
+              <ul className="list-unstyled ms-3">
                 {menu[day].map((dish, idx) => (
-                  <li key={idx}>{dish}</li>
+                  <li key={idx} className="mb-1">• {dish}</li>
                 ))}
               </ul>
             )}
           </section>
         ))}
       </div>
-      <div style={{ marginBottom: 12 }}>
-        {isAdmin ? (
-          <>
-            <button onClick={() => setEditMode(e => !e)}>{editMode ? "Avsluta redigering" : "Redigera meny"}</button>
-            <button onClick={handleAdminLogout} style={{ marginLeft: 8 }}>Logga ut</button>
-            <button onClick={resetMenu} style={{ marginLeft: 8 }}>Återställ standard</button>
-          </>
-        ) : (
-          <button onClick={handleAdminLogin}>Logga in som admin</button>
-        )}
-      </div>
 
-      {editMode && isAdmin && (
-        <div style={{ marginTop: 12 }}>
-          <button onClick={saveMenu}>Spara meny</button>
-        </div>
-      )}
+      
     </div>
   );
 }

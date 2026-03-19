@@ -134,6 +134,7 @@
   background:#111;
   color:white;
   padding:40px 20px;
+  margin: 0px;
 }
 
 .footer-title{
@@ -249,13 +250,21 @@
 }
 .menu-page{
   min-height:100vh;
-  background:url("/imges/wood.webp") center/cover no-repeat;
+  background:url("/imges/wood.webp");
   padding:60px 30px;
   text-align:center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.priceing-Invidual{
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0px;
+  width: 100%;
 }
 
 /* Ensure menu title is visible on wood background */
-.menu-page .menu-title {
+.container .menu-title {
   color: white;
 }
 
@@ -273,16 +282,24 @@
 }
 .lunch-page {
   min-height:100vh;
-  background:url("/imges/wood.webp") center/cover no-repeat;
+  background:url("/imges/wood.webp");
   padding:60px 30px;
+  margin: 0px;
   text-align:center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.admin-Panel{
+  margin: 3rem;
 }
 .row menu {
-  background:url("/imges/wood.webp") center/cover no-repeat;
+  background:url("/imges/wood.webp");
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
+  background-attachment: fixed;
+  background-size: cover;
 }
 /* Titel */
 .lunch-title {

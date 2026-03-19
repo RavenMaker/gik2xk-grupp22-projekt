@@ -7,7 +7,10 @@ const Admin = () => {
   const [editTarget, setEditTarget] = useState(null);
 
   const [catForm, setCatForm] = useState({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
-  const [prodForm, setProdForm] = useState({ selectedName: '', selectedTitle: '', title: '', desc: '' });
+  const [prodForm, setProdForm] = useState({ 
+    selectedName: '', selectedTitle: '', title: '', desc: '', 
+    cp1: 0, cp2: 0, cp3: 0 // Lägg till dessa
+  });
 
   const API_URL = 'http://localhost:5000/api/products';
 
@@ -63,15 +66,15 @@ const Admin = () => {
           image_url: data.img
         };
       } else {
-        // För vanliga produkter
         const catPrices = getPricesFromCat(data.selectedName, data.selectedTitle);
         payload = {
           category: data.selectedTitle,
           title: data.title,
           description: data.desc,
-          price1: catPrices.price1,
-          price2: catPrices.price2,
-          price3: catPrices.price3,
+          // Ändra fältnamnen här så de matchar din Product-modell!
+          custom_price1: Number(data.cp1) || 0,
+          custom_price2: Number(data.cp2) || 0,
+          custom_price3: Number(data.cp3) || 0,
           image_url: catPrices.image_url
         };
       }
@@ -112,7 +115,7 @@ const Admin = () => {
   const closeModals = () => {
     setEditTarget(null);
     setCatForm({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
-    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '' });
+    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1:0, cp2:0, cp3:0 });
     document.querySelectorAll('.modal').forEach(el => {
       const m = window.bootstrap.Modal.getInstance(el);
       if (m) m.hide();
@@ -122,8 +125,22 @@ const Admin = () => {
   const getPricesFromCat = (name, title) => {
     const cat = Object.values(menuData).find(c => c[0] === name && c[1] === title);
     return cat ? { 
-      price1: cat[2].price1, price2: cat[2].price2, price3: cat[2].price3, image_url: cat[2].imageClass
-    } : { price1: 0, price2: 0, price3: 0, image_url: '' };
+      price1: cat[2].price1, 
+      price2: cat[2].price2, 
+      price3: cat[2].price3, 
+      image_url: cat[2].imageClass,
+      cprice1: cat[2].cp1,
+      cprice2: cat[2].cp2,
+      cprice3: cat[2].cp3
+    } : { 
+      price1: 0, 
+      price2: 0, 
+      price3: 0, 
+      image_url: '',
+      cprice1: 0, 
+      cprice2: 0,
+      cprice3: 0
+    };
   };
 
   const uniqueNames = [...new Set(Object.values(menuData).map(v => v[0]))];
@@ -136,6 +153,7 @@ const Admin = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Meny Administration</h2>
         <div>
+          <button className="btn btn-outline-success me-2" onClick={() => window.location.href = '/lunch?edit=true'}>Redigera Lunchmeny</button>
           <button className="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#catModal" onClick={() => setEditTarget(null)}>+ Ny Prisklass</button>
           <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prodModal" onClick={() => setEditTarget(null)}>+ Ny Produkt</button>
         </div>
@@ -174,6 +192,11 @@ const Admin = () => {
                       <div>
                         <div className="fw-bold">{item[0]}</div>
                         <div className="small text-muted">{item[1]}</div>
+                        {(realProd.custom_price1 > 0 || realProd.custom_price2 > 0 || realProd.custom_price3 > 0) && (
+                        <div className="small text-success fw-bold">
+                          Individuellt pris: {realProd.custom_price1}:- / {realProd.custom_price2}:- / {realProd.custom_price3}:-
+                        </div>
+                        )}
                       </div>
                       <div className="d-flex">
                         <button className="btn btn-sm text-primary me-1" onClick={() => {
@@ -182,7 +205,10 @@ const Admin = () => {
                             selectedName: val[0], 
                             selectedTitle: realProd.category, 
                             title: realProd.title, 
-                            desc: realProd.description 
+                            desc: realProd.description,
+                            cp1: realProd.custom_price1,
+                            cp2: realProd.custom_price2,
+                            cp3: realProd.custom_price3
                           });
                           new window.bootstrap.Modal(document.getElementById('prodModal')).show();
                         }}>Redigera</button>
@@ -249,6 +275,12 @@ const Admin = () => {
                   <option value="">-- Välj --</option>
                   {filteredTitles.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
+                <label className="small fw-bold mt-2">Individuella priser (lämna 0 för att använda kategorins pris)</label>
+                <div className="row g-2 mb-3">
+                  <div className="col"><small>Avh.</small><input type="number" className="form-control" value={prodForm.cp1} onChange={e => setProdForm({...prodForm, cp1: e.target.value})} /></div>
+                  <div className="col"><small>Serv.</small><input type="number" className="form-control" value={prodForm.cp2} onChange={e => setProdForm({...prodForm, cp2: e.target.value})} /></div>
+                  <div className="col"><small>Fam.</small><input type="number" className="form-control" value={prodForm.cp3} onChange={e => setProdForm({...prodForm, cp3: e.target.value})} /></div>
+                </div>
                 <input type="text" className="form-control mb-3" placeholder="Namn" value={prodForm.title} onChange={e => setProdForm({...prodForm, title: e.target.value})} required />
                 <textarea className="form-control" rows="3" placeholder="Beskrivning" value={prodForm.desc} onChange={e => setProdForm({...prodForm, desc: e.target.value})} />
               </div>

@@ -18,7 +18,10 @@ const productService = {
       price3: plainProduct.price3,
       image_url: plainProduct.image_url,
       averageRating: average.toFixed(1), // Genomsnittet (t.ex. 4.5)
-      reviewCount: ratings.length        // ANTAL personer som röstat
+      reviewCount: ratings.length,        // ANTAL personer som röstat
+      custom_price1: plainProduct.custom_price1,
+      custom_price2: plainProduct.custom_price2,
+      custom_price3: plainProduct.custom_price3
     };
   },
 
@@ -66,7 +69,10 @@ const productService = {
             it.description || '', 
             it.id, 
             avg.toFixed(1), 
-            ratings.length
+            ratings.length,
+            it.custom_price1 || 0,
+            it.custom_price2 || 0,
+            it.custom_price3 || 0
           ];
         }
       });

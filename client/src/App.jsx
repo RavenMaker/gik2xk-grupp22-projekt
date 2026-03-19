@@ -23,6 +23,9 @@ function App() {
                   <li className="nav-item">
                     <Link className="nav-link" to="/menu">Meny</Link>
                   </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/lunch">Veckans Lunch</Link>
+                  </li>
                 </ul>
               </div>
             </div>
