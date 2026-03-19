@@ -213,7 +213,7 @@ export default function Meny() {
                 </div>
 
                 {valdKategori && (
-                    <p style={{ margin: '1rem 0' }}>
+                    <p className='text' style={{ margin: '1rem 0' }}>
                         Filtrerar på: <strong>{valdKategori}</strong>
                     </p>
                 )}
