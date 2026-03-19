@@ -260,24 +260,7 @@ export default function Meny() {
 function CategoryCard({ category, catKey, itemIds, onAdd }) {
     const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category
 
-    const rateProduct = async (productId, val) => {
-        if (!productId) { alert('Produkten saknar id för betyg.'); return; }
-        try {
-            const res = await fetch(`http://localhost:5000/api/products/${productId}/rate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rating: val })
-            });
-            if (res.ok) {
-                alert('Tack för ditt betyg!');
-            } else {
-                alert('Kunde inte spara betyg.');
-            }
-        } catch (err) {
-            console.error('Rate error', err);
-            alert('Fel vid anslutning.');
-        }
-    };
+    
 
     return (
         <div className='pizza-category'>
