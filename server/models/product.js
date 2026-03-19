@@ -9,15 +9,30 @@ module.exports = (sequelize, DataTypes) => {
     },
     price1: { 
       type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
-      allowNull: true 
+      allowNull: false,
+      defaultValue: 0
     },
     price2: { 
       type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
-      allowNull: true 
+      allowNull: false,
+      defaultValue: 0
     },
     price3: { 
       type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
-      allowNull: true 
+      allowNull: false,
+      defaultValue: 0 
+    },
+    custom_price1: { 
+      type: DataTypes.DOUBLE, 
+      defaultValue: 0 
+    },
+    custom_price2: { 
+      type: DataTypes.DOUBLE, 
+      defaultValue: 0 
+    },
+    custom_price3: { 
+      type: DataTypes.DOUBLE, 
+      defaultValue: 0 
     },
     image_url: { 
       type: DataTypes.STRING 

@@ -162,11 +162,10 @@ export default function Meny() {
         }
     });
 
-    if (loading) return <p style={{ padding: '2rem' }}>Laddar meny...</p>
-    if (error)   return <p style={{ padding: '2rem', color: 'red' }}>Fel: {error}</p>
+   
 
     return (
-        <div>
+        <div className="menu-page">
             {/* NAVBAR (Varukorg) - Från kod 1 */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
                 <div className="container">
@@ -195,7 +194,7 @@ export default function Meny() {
             </nav>
 
             {/* Innehåll och Layout - Från kod 2 */}
-            <div className="menu-page container mt-4">
+            <div className="container mt-4">
                 <h1 className="menu-title">Vår meny</h1>
                 <div className="row menu">
                     {topCategories.map((cat) => (
@@ -297,32 +296,70 @@ function CategoryCard({ category, catKey, itemIds, onAdd }) {
                 </div>
                 <div className="col-md-8">
                     <ol className="pizza-list">
-                        {Object.entries(itemlist).map(([itemKey, [namn, beskrivning, id, avgRating, revCount]]) => (
-                            <li key={itemKey} className="Pizza-discription mb-3">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div style={{ flex: 1 }}>
-                                        <strong>{itemIds[`${catKey}-${itemKey}`] ? `${itemIds[`${catKey}-${itemKey}`]}. ` : ""}{namn}</strong> – {beskrivning}
-                                    </div>
-                                    <div className="d-flex align-items-center">
-                                        <ProductRating 
-                                            productId={id} 
-                                            initialRating={avgRating} 
-                                            initialCount={revCount} 
-                                        />
-                                        <div className="btn-group ms-3" role="group" aria-label="rate-buttons">
-                                            {[1,2,3,4,5].map(i => (
-                                                <button key={i} type="button" className="btn btn-sm btn-outline-primary" onClick={() => rateProduct(id, i)}>
-                                                    {i}
-                                                </button>
-                                            ))}
+                        {Object.entries(itemlist).map(([itemKey, itemData]) => {
+                            // Vi packar upp hela arrayen. customP1 osv är de priser vi sparat på produkten.
+                            const [namn, beskrivning, id, avgRating, revCount, customP1, customP2, customP3] = itemData;
+
+                            // Logik: Om produkten har ett eget pris (> 0), använd det. Annars använd kategorins pris.
+                            const productPrices = {
+                                p1: customP1 > 0 ? customP1 : price1,
+                                p2: customP2 > 0 ? customP2 : price2,
+                                p3: customP3 > 0 ? customP3 : price3
+                            };
+                            const ProductPricesMessege={
+                                p1Message: "Avh:" + productPrices.p1 +":-",
+                                p2Message: "Serv:" + productPrices.p2 +":-",
+                                p3Message: "Familj:" + productPrices.p3 +":-",
+                            }
+
+                            return (
+                                <li key={itemKey} className="Pizza-discription mb-3">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className='d-flex flex-column'>
+                                            <div style={{ flex: 1 }}>
+                                                <strong>{itemIds[`${catKey}-${itemKey}`] ? `${itemIds[`${catKey}-${itemKey}`]}. ` : ""}{namn}</strong> – {beskrivning}
+                                            </div>
+                                            <div className='priceing-Invidual'>
+                                                {(customP1 > 0 ) && (
+                                                <div className="small mt-1">
+                                                    <span className="badge bg-light text-dark border">
+                                                        {ProductPricesMessege.p1Message} 
+                                                    </span>
+                                                </div>
+                                                )}
+                                                {(customP2 > 0 ) && (
+                                                    <div className="small mt-1">
+                                                        <span className="badge bg-light text-dark border">
+                                                            {ProductPricesMessege.p2Message} 
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {(customP3 > 0 ) && (
+                                                    <div className="small mt-1">
+                                                        <span className="badge bg-light text-dark border">
+                                                            {ProductPricesMessege.p3Message} 
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                        <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, {p1: price1, p2: price2, p3: price3})}>
-                                            + Lägg till
-                                        </button>
+                                       
+                                        
+                                        <div className="d-flex align-items-center">
+                                           
+                                            <ProductRating productId={id} initialRating={avgRating} initialCount={revCount} />
+                                            
+                                            {/* Skicka med de specifika produktpriserna till onAdd */}
+                                            <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, productPrices)}>
+                                                + Lägg till
+                                            </button>
+                                        </div>
+
                                     </div>
-                                </div>
-                            </li>
-                        ))}
+                                    
+                                </li>
+                            );
+                        })}
                     </ol>
                 </div>
             </div>

@@ -3,10 +3,7 @@ body {
   background: #f3f3f3;
 }
 .menu{
-  justify-content: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 28px;
+  justify-content: space-evenly;
 }
 .menu-title {
   text-align: center;
@@ -17,29 +14,19 @@ body {
 
 .menu-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  width: 200px;
-  height: 200px;
+  padding: 6rem;
+  width: 12rem;
+  height: 10rem;
   background: linear-gradient(45deg,rgba(255, 145, 0, 1) 0%, rgba(217, 217, 28, 1) 50%, rgba(255, 239, 94, 1) 100%);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  margin: 0.6rem;
-  border-radius: 12px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  margin: 1rem;
+  border-radius: 1rem;
+  transition: 0.5s;
 }
 .menu-item:hover{
-  transform: translateY(-6px);
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-}
-
-.star-rating {
-    display: inline-block;
-    white-space: nowrap;
-}
-.star-rating span {
-    transition: color 0.2s;
 }
 
 
@@ -50,6 +37,13 @@ body {
   width: 10rem;
   height: 5rem;
   margin: 1rem;
+   background: linear-gradient(180deg,rgba(255, 145, 0, 1) 0%, rgba(217, 217, 28, 1) 50%, rgba(255, 239, 94, 1) 100%);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  border-radius: 1rem;
+  transition: 0.5s;
+}
+.menu-all:hover{
+   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 .menu-link {
   text-decoration: none;
@@ -62,11 +56,10 @@ body {
 }
 
 .menu-icon {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   object-fit: contain;
-  margin: 0 auto;
-  display: block;
+  margin-bottom: 10px;
 }
 
 .extra-icon {
@@ -76,37 +69,9 @@ body {
 }
 
 .menu-name {
-  margin-top: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.menu-all{
-  align-self: center;
-  width: 160px;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Placera "Visa alla" på egen rad under ikonerna och centrera */
-.menu .menu-all {
-  flex: 0 0 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
-}
-.menu .menu-all .menu-name {
-  width: 160px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(45deg, rgba(255,145,0,1) 0%, rgba(217,217,28,1) 50%, rgba(255,239,94,1) 100%);
-  border-radius: 12px;
-  box-shadow: rgba(50, 50, 93, 0.15) 0px 4px 8px -2px;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .color-box {
@@ -156,12 +121,13 @@ transition: 0.5s;
 .pizza-category:hover{
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
-
-
+.pizza-list{
+  padding-left: 0px;
+}
 .pizza-list li{
 margin-bottom:6px;
 font-size:17px;
-padding-left: 20px;
+padding-left: 10px;
  list-style-type: none;
 }
 
