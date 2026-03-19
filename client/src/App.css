@@ -282,16 +282,24 @@
 }
 .lunch-page {
   min-height:100vh;
-  background:url("/imges/wood.webp") center/cover no-repeat;
+  background:url("/imges/wood.webp");
   padding:60px 30px;
+  margin: 0px;
   text-align:center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.admin-Panel{
+  margin: 3rem;
 }
 .row menu {
-  background:url("/imges/wood.webp") center/cover no-repeat;
+  background:url("/imges/wood.webp");
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
+  background-attachment: fixed;
+  background-size: cover;
 }
 /* Titel */
 .lunch-title {
