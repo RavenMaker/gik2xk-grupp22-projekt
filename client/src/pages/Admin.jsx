@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API } from '../utils/api';
 import CategoryModal from '../components/CategoryModal';
 import ProductModal from '../components/ProductModal';
 
