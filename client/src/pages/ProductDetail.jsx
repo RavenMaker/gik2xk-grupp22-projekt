@@ -76,7 +76,7 @@ export default function ProductDetail() {
           idlist[`${catKey}-${itemKey}`] = countingItems++;
         });
 
-    });
+    }); 
 
   useEffect(() => {
     if (!menuItem || Object.keys(menuItem).length === 0) return;

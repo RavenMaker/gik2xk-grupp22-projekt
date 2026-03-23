@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     custom_price1: { 
       type: DataTypes.DOUBLE, 
       defaultValue: 0 
-    },
+    }, 
     custom_price2: { 
       type: DataTypes.DOUBLE, 
       defaultValue: 0 

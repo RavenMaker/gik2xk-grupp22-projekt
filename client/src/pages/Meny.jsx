@@ -21,7 +21,7 @@ function ProductRating({ productId, initialRating, initialCount }) {
     const [hover, setHover] = useState(0);
 
     useEffect(() => {
-        setRating(parseFloat(initialRating) || 0);
+        setRating(parseFloat(initialRating) || 0); 
         setCount(parseInt(initialCount) || 0);
     }, [initialRating, initialCount]);
 
