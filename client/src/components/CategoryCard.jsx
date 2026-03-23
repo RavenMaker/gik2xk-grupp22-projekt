@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import ProductRating from './ProductRating';
 
 export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd }) {
     const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category;
@@ -51,6 +52,9 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                                                     {beskrivning}
                                                 </div>
                                             </Link>
+                                            <div>
+                                                <ProductRating productId={id} initialRating={avgRating} initialCount={revCount} />
+                                            </div>
                                             <div className='priceing-Invidual'>
                                                 {(customP1 > 0) && (
                                                     <div className="small mt-1">
