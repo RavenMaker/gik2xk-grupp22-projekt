@@ -13,58 +13,6 @@ const topCategories = [
     { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png", name: "Extra tillägg" },
 ]
 
-const fallbackData = {
-    Category1:['Pizza','Pizza Class 1',{
-        price1: 100,
-        price2: 120,
-        price3: 259,
-        imageClass:"/imges/Vesuvio_pizza.jpeg",
-        itemlist: {
-            item1:["Margherita Pizza", "En klassisk pizzamåltid med tomatsås, mozzarella och basill."],
-            item2:["Pepperoni Pizza", "En populär pizzamåltid med tomatsås, mozzarella och pepperoni."],  
-            item3:["Hawaiian Pizza", "En fruktig pizzamåltid med tomatsås, mozzarella och ananas."],
-            item5:["Meat Lovers Pizza", "En köttig pizzamåltid med tomatsås, mozzarella och köttfärs."]
-        }
-    }],
-    Category2: ['Pizza','Pizza Class 2', {
-        price1: 125,
-        price2: 170,
-        price3: 270,
-        imageClass:"/imges/Budapest_pizza.jpeg",
-        itemlist: {
-            item1:["kebab Pizza", "kebab, ost, tomatsås"],
-            item2:["HawaiiSpecial", "annanas, bannan, sinka, ost"],  
-            item3:["kalsone", "inbakad pizza med ost, tomatsås"]
-        }
-    }],
-    Category3:['salad', 'vegetarian', {
-            price1: 40,
-            price2: 70,  
-            price3: 0,
-            imageClass:"/imges/Peperoni_pizza.jpeg",
-            itemlist: {
-                item1:["Caesar Salad", "En frisk och smakrik sallat med kyckling, ost och dressing."],
-                item2:["Grilled Chicken Salad", "En frisk och smakrik sallat med grillad kyckling, ost och dressing."],
-                item3:["Greek Salad", "En frisk och smakrik sallat med fetaost, tomater och oliver."],
-                item4:["Caprese Salad", "En frisk och smakrik sallat med tomater, fetaost och basilika."],
-                item5:["Tuna Salad", "En frisk och smakrik sallat med tonfisk, avocado och dressing."]
-            }
-        }],
-    Category4: ['dryck','dryck', {
-            price1: 25,
-            price2: 30,
-            price3: 50,
-            imageClass:"/imges/Vesuvio_pizza.jpeg",
-            itemlist: {
-                item1:["Coca Cola", "En klassisk läskedryck som är känd för sin söta och kolsyrade smak. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."],
-                item2:["Fanta", "En populär läskedryck med en fruktig smak. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."],
-                item3:["Sprite", "En refreshing läskedryck med en fruktig smak. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."],     
-                item4:["Mineralvatten", "En ren och frisk mineralvatten. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."],
-                item5:["Jordgubbsjuice", "En naturlig jordgubbsjuice med en fruktig smak. Perfekt för att släcka törsten och njuta av en uppfriskande dryck."]
-            }
-        }]
-};
-
 function ProductRating({ productId, initialRating, initialCount }) {
     const [rating, setRating] = useState(parseFloat(initialRating) || 0);
     const [count, setCount] = useState(parseInt(initialCount) || 0);
@@ -132,8 +80,7 @@ export default function Meny() {
             })
             .catch(err => {
                 console.error("Fel vid hämtning:", err)
-                setMenuItem(fallbackData)
-                setLoading(false)
+                setLoading(true)
                 setError(null)  
             })
     }, [])
@@ -151,6 +98,13 @@ export default function Meny() {
     const removeFromCart = (id) => {
         setCart(cart.filter(item => item.id !== id));
     };
+    const section = useRef(null)
+    const scrollToSection = (elementRef) => {
+        window.scrollTo({
+        top: elementRef.current.offsetTop,
+        behavior: "smooth",
+        });
+    };
 
     const itemIds = {};
     let idCounter = 1;
@@ -161,7 +115,6 @@ export default function Meny() {
             });
         }
     });
-
    
 
     return (
@@ -199,14 +152,14 @@ export default function Meny() {
                 <div className="row menu">
                     {topCategories.map((cat) => (
                         <div key={cat.href} className="col-md-4 col-sm-6 menu-item text-center">
-                            <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori(cat.href) }}>
+                            <a className="menu-link" href="#section" onClick={(e) => { e.preventDefault(); setValdKategori(cat.href); scrollToSection(section) }}>
                                 <img className="menu-icon" src={cat.img} alt={cat.name} />
                                 <div className="menu-name">{cat.name}</div>
                             </a>
                         </div>
                     ))}
                     <div className="col-md-4 col-sm-6 menu-all text-center">
-                        <a className="menu-link" href="/menu" onClick={(e) => { e.preventDefault(); setValdKategori("") }}>
+                        <a className="menu-link" href="#section" onClick={(e) => { e.preventDefault(); setValdKategori(""); scrollToSection(section) }}>
                             <div className="menu-name">Visa alla</div>
                         </a>
                     </div>
@@ -218,7 +171,7 @@ export default function Meny() {
                     </p>
                 )}
 
-                <div id="MenuList">
+                <div id="MenuList" ref={section}>
                     {Object.entries(menuItem)
                         .filter(([catKey, c]) => valdKategori === "" || c[0].toLowerCase() === valdKategori.toLowerCase())
                         .map(([catKey, category], index) => (
@@ -263,7 +216,7 @@ function CategoryCard({ category, catKey, itemIds, onAdd }) {
     
 
     return (
-        <div className='pizza-category'>
+        <div className='pizza-category' >
             <div className="pizza-header">
                 <h4 className="pizza-title">{title}</h4>
                 <div className="pizza-prices col-md-4">
