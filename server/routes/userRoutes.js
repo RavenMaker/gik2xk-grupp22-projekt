@@ -6,11 +6,10 @@ const userService = require('../services/userService');
 // Detta uppfyller kravet på sida 8: "Som kund vill jag kunna se min varukorg"
 router.get('/:id/cart', async (req, res) => {
   try {
-    const userId = req.params.id;
-    const cart = await userService.getUserCart(userId);
+    const cart = await userService.getUserCart(req.params.id);
     
     if (!cart) {
-      return res.status(404).json({ message: "Varukorg hittades inte för denna användare" });
+      return res.json({ Products: [] });
     }
     
     res.json(cart);

@@ -12,17 +12,17 @@ export default function PriceModal({ activeProduct, onAdd, onClose }) {
                     <div className="modal-body">
                         <div className="d-grid gap-2">
                             {activeProduct.prices.p1 > 0 && (
-                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Avh.", activeProduct.prices.p1)}>
+                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Avh.", activeProduct.prices.p1, activeProduct.productId)}>
                                     Avhämtning ({activeProduct.prices.p1}:-)
                                 </button>
                             )}
                             {activeProduct.prices.p2 > 0 && (
-                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Serv.", activeProduct.prices.p2)}>
+                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Serv.", activeProduct.prices.p2, activeProduct.productId)}>
                                     Servering ({activeProduct.prices.p2}:-)
                                 </button>
                             )}
                             {activeProduct.prices.p3 > 0 && (
-                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Familj", activeProduct.prices.p3)}>
+                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Familj", activeProduct.prices.p3, activeProduct.productId)}>
                                     Familjepizza ({activeProduct.prices.p3}:-)
                                 </button>
                             )}

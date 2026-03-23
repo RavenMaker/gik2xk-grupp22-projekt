@@ -3,6 +3,9 @@ import CartNavbar from '../components/CartNavbar'
 import PriceModal from '../components/PriceModal'
 import CategoryCard from '../components/CategoryCard'
 
+const API_URL = 'http://localhost:5000/api';
+const CART_KEY = 'guestCart'; // localStorage key
+
 const topCategories = [
     { href: "pizza",        img: "https://cdn-icons-png.flaticon.com/512/1404/1404945.png",     name: "Pizzor"},
     { href: "hamburgare",   img: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",     name: "Hamburgare" },
@@ -16,17 +19,37 @@ const topCategories = [
     { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png",     name: "Extra tillägg" },
 ]
 
+// --- localStorage helpers ---
+const loadCart = () => {
+    try {
+        const saved = localStorage.getItem(CART_KEY);
+        return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+};
+
+const saveCart = (cart) => {
+    try {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {}
+};
+
 export default function Meny() {
     const [valdKategori, setValdKategori] = useState("")
     const [menuItem, setMenuItem] = useState({})
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-    const [cart, setCart] = useState([])
+    const [cart, setCart] = useState(loadCart) // load saved cart immediately
     const [showModal, setShowModal] = useState(false);
     const [activeProduct, setActiveProduct] = useState(null);
+    const [cartMessage, setCartMessage] = useState('');
 
+    // Persist cart to localStorage whenever it changes
     useEffect(() => {
-        fetch("http://localhost:5000/api/products/menu")
+        saveCart(cart);
+    }, [cart]);
+
+    // Fetch menu on mount
+    useEffect(() => {
+        fetch(`${API_URL}/products/menu`)
             .then(res => {
                 if (!res.ok) throw new Error("Servern svarade med fel")
                 return res.json()
@@ -37,23 +60,49 @@ export default function Meny() {
             })
             .catch(err => {
                 console.error("Fel vid hämtning:", err)
-                setLoading(true)
-                setError(null)
+                setLoading(false)
             })
     }, [])
 
-    const openPriceSelection = (productName, prices) => {
-        setActiveProduct({ name: productName, prices });
+    const openPriceSelection = (productName, prices, productId) => {
+        setActiveProduct({ name: productName, prices, productId });
         setShowModal(true);
     };
 
-    const addToCart = (productName, type, price) => {
-        setCart([...cart, { name: `${productName} (${type})`, price: price, id: Date.now() }]);
+    const addToCart = (productName, type, price, productId) => {
         setShowModal(false);
+
+        setCart(prev => {
+            // Use productId + type as key so "Pizza (Avh.)" and "Pizza (Serv.)" are separate
+            const key = `${productId}-${type}`;
+            const existing = prev.find(item => item.key === key);
+            let updated;
+            if (existing) {
+                updated = prev.map(item =>
+                    item.key === key ? { ...item, amount: item.amount + 1 } : item
+                );
+            } else {
+                updated = [...prev, {
+                    key,
+                    id: productId,
+                    name: `${productName} (${type})`,
+                    price,
+                    amount: 1
+                }];
+            }
+            return updated;
+        });
+
+        showMessage('Tillagd i varukorgen!');
     };
 
-    const removeFromCart = (id) => {
-        setCart(cart.filter(item => item.id !== id));
+    const removeFromCart = (key) => {
+        setCart(prev => prev.filter(item => item.key !== key));
+    };
+
+    const showMessage = (msg) => {
+        setCartMessage(msg);
+        setTimeout(() => setCartMessage(''), 2500);
     };
 
     const section = useRef(null)
@@ -88,7 +137,15 @@ export default function Meny() {
         <div className="menu-page">
             <CartNavbar cart={cart} onRemove={removeFromCart} />
 
-            {/* Innehåll och Layout */}
+            {cartMessage && (
+                <div
+                    className="position-fixed bottom-0 end-0 m-3 alert alert-success shadow"
+                    style={{ zIndex: 9999, minWidth: '200px' }}
+                >
+                    {cartMessage}
+                </div>
+            )}
+
             <div className="container mt-4">
                 <h1 className="menu-title">Vår meny</h1>
                 <div className="row menu">

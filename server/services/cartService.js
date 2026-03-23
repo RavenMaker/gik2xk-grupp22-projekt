@@ -1,28 +1,27 @@
-const { Cart, CartRow, Product } = require('../models');
+const { Cart, CartRow } = require('../models');
 
 const cartService = {
-  // Som kund vill jag lägga produkter i en varukorg [cite: 88, 216]
   async addProductToCart(userId, productId, amount) {
-    // 1. Hitta eller skapa en aktiv varukorg för användaren [cite: 220, 222]
+    // Step 1: Find or create cart for this user
     const [cart] = await Cart.findOrCreate({
-      where: { user_id: userId, payed: false }
+      where: { user_id: userId, payed: false },
+      defaults: { payed: false }
     });
 
-    // 2. Kolla om produkten redan finns i korgen [cite: 224]
+    // Step 2: Check if product is already in the cart
     const existingRow = await CartRow.findOne({
       where: { cart_id: cart.id, product_id: productId }
     });
 
     if (existingRow) {
-      // Uppdatera antalet om den redan finns [cite: 224]
-      return await existingRow.update({ amount: existingRow.amount + amount });
+      // Already in cart — just increment amount
+      return await existingRow.update({ amount: existingRow.amount + Number(amount) });
     } else {
-      // Skapa en ny rad i kopplingstabellen [cite: 223]
-      return await CartRow.create({
-        cart_id: cart.id,
-        product_id: productId,
-        amount: amount
-      });
+      // cart.addProduct() is the correct belongsToMany method —
+      // safer than CartRow.create() because cart_id and product_id
+      // are NOT defined as explicit fields in cart_row.js
+      await cart.addProduct(productId, { through: { amount: Number(amount) } });
+      return { cart_id: cart.id, product_id: productId, amount };
     }
   }
 };

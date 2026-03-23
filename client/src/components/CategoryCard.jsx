@@ -22,6 +22,7 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                     <ol className="pizza-list">
                         {Object.entries(itemlist).map(([itemKey, itemData]) => {
                             const [namn, beskrivning, id, avgRating, revCount, customP1, customP2, customP3] = itemData;
+                            // id is the real database product id, needed for cart
 
                             const productPrices = {
                                 p1: customP1 > 0 ? customP1 : price1,
@@ -76,7 +77,7 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                                         </div>
 
                                         <div className="d-flex align-items-center">
-                                            <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, productPrices)}>
+                                            <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, productPrices, id)}>
                                                 + Lägg till
                                             </button>
                                         </div>
