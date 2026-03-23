@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import CategoryModal from '../components/CategoryModal';
+import ProductModal from '../components/ProductModal';
 
 const Admin = () => {
   const [menuData, setMenuData] = useState({});
@@ -7,9 +9,9 @@ const Admin = () => {
   const [editTarget, setEditTarget] = useState(null);
 
   const [catForm, setCatForm] = useState({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
-  const [prodForm, setProdForm] = useState({ 
-    selectedName: '', selectedTitle: '', title: '', desc: '', 
-    cp1: 0, cp2: 0, cp3: 0, cImg: ''// Lägg till dessa
+  const [prodForm, setProdForm] = useState({
+    selectedName: '', selectedTitle: '', title: '', desc: '',
+    cp1: 0, cp2: 0, cp3: 0, cImg: ''
   });
 
   const API_URL = 'http://localhost:5000/api/products';
@@ -22,8 +24,8 @@ const Admin = () => {
       ]);
       setMenuData(await menuRes.json());
       setRawProducts(await prodRes.json());
-    } catch (err) { 
-      console.error("Fel vid hämtning:", err); 
+    } catch (err) {
+      console.error("Fel vid hämtning:", err);
       setMessage("Kunde inte hämta menydata.");
     }
   };
@@ -46,56 +48,53 @@ const Admin = () => {
     }
   };
 
-    const handleSave = async (type, data) => {
-      const isUpdate = !!editTarget;
-      const url = isUpdate ? `${API_URL}/${editTarget.id}` : API_URL;
-      const method = isUpdate ? 'PUT' : 'POST';
+  const handleSave = async (type, data) => {
+    const isUpdate = !!editTarget;
+    const url = isUpdate ? `${API_URL}/${editTarget.id}` : API_URL;
+    const method = isUpdate ? 'PUT' : 'POST';
 
-      let payload = {};
-      
-      if (type === 'category') {
-        // 1 & 2: Här använder vi data.name (Huvudkategori) dynamiskt 
-        // och sätter titeln till "Kategori Info" så att systemet fattar att det är en inställningsrad
-        payload = {
-          category: data.title,       // T.ex. "Klass 1"
-          title: "Kategori Info",      // Markör för att det är en kategorinställning
-          description: data.name,     // Huvudkategori (t.ex. "Pizzor") - NU DYNAMISK
-          price1: Number(data.p1) || 0,
-          price2: Number(data.p2) || 0,
-          price3: Number(data.p3) || 0,
-          image_url: data.img
-        };
-      } else {
-        const catPrices = getPricesFromCat(data.selectedName, data.selectedTitle);
-        payload = {
-          category: data.selectedTitle,
-          title: data.title,
-          description: data.desc,
-          // Ändra fältnamnen här så de matchar din Product-modell!
-          custom_price1: Number(data.cp1) || 0,
-          custom_price2: Number(data.cp2) || 0,
-          custom_price3: Number(data.cp3) || 0,
-          image_url: catPrices.image_url,
-          custom_image_pruduct: data.cImg
-        };
-      }
+    let payload = {};
 
-      try {
-        const res = await fetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        
-        if (res.ok) {
-          setMessage('Sparat!');
-          closeModals();
-          fetchData(); // Uppdatera listan direkt
-        }
-      } catch (err) { 
-        setMessage('Ett fel uppstod vid sparning.'); 
+    if (type === 'category') {
+      payload = {
+        category: data.title,
+        title: "Kategori Info",
+        description: data.name,
+        price1: Number(data.p1) || 0,
+        price2: Number(data.p2) || 0,
+        price3: Number(data.p3) || 0,
+        image_url: data.img
+      };
+    } else {
+      const catPrices = getPricesFromCat(data.selectedName, data.selectedTitle);
+      payload = {
+        category: data.selectedTitle,
+        title: data.title,
+        description: data.desc,
+        custom_price1: Number(data.cp1) || 0,
+        custom_price2: Number(data.cp2) || 0,
+        custom_price3: Number(data.cp3) || 0,
+        image_url: catPrices.image_url,
+        custom_image_pruduct: data.cImg
+      };
+    }
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setMessage('Sparat!');
+        closeModals();
+        fetchData();
       }
-    };
+    } catch (err) {
+      setMessage('Ett fel uppstod vid sparning.');
+    }
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Radera produkt?")) return;
@@ -116,7 +115,7 @@ const Admin = () => {
   const closeModals = () => {
     setEditTarget(null);
     setCatForm({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
-    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1:0, cp2:0, cp3:0, cImg:'' });
+    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1: 0, cp2: 0, cp3: 0, cImg: '' });
     document.querySelectorAll('.modal').forEach(el => {
       const m = window.bootstrap.Modal.getInstance(el);
       if (m) m.hide();
@@ -125,24 +124,18 @@ const Admin = () => {
 
   const getPricesFromCat = (name, title) => {
     const cat = Object.values(menuData).find(c => c[0] === name && c[1] === title);
-    return cat ? { 
-      price1: cat[2].price1, 
-      price2: cat[2].price2, 
-      price3: cat[2].price3, 
+    return cat ? {
+      price1: cat[2].price1,
+      price2: cat[2].price2,
+      price3: cat[2].price3,
       image_url: cat[2].imageClass,
       cprice1: cat[2].cp1,
       cprice2: cat[2].cp2,
       cprice3: cat[2].cp3,
       cImg: cat[2].cImg
-    } : { 
-      price1: 0, 
-      price2: 0, 
-      price3: 0, 
-      image_url: '',
-      cprice1: 0, 
-      cprice2: 0,
-      cprice3: 0, 
-      cImg:''
+    } : {
+      price1: 0, price2: 0, price3: 0, image_url: '',
+      cprice1: 0, cprice2: 0, cprice3: 0, cImg: ''
     };
   };
 
@@ -169,7 +162,7 @@ const Admin = () => {
               <div className="card-header d-flex justify-content-between align-items-center bg-light border-bottom-0 pt-3">
                 <div>
                   <h5 className="mb-0 fw-bold">{val[1]}</h5>
-                  <small className="text-muted text-uppercase" style={{fontSize: '0.7rem'}}>
+                  <small className="text-muted text-uppercase" style={{ fontSize: '0.7rem' }}>
                     Filter: <strong>{val[0]}</strong> | {val[2].price1}:- / {val[2].price2}:- / {val[2].price3}:-
                   </small>
                 </div>
@@ -180,12 +173,10 @@ const Admin = () => {
               </div>
               <ul className="list-group list-group-flush p-2">
                 {Object.entries(val[2].itemlist).map(([itemKey, item]) => {
-                  
-                  // LÄGG TILL DENNA RAD HÄR:
-                  if (item[0] === "Kategori Info") return null; 
+                  if (item[0] === "Kategori Info") return null;
 
-                  const realProd = rawProducts.find(p => 
-                    p.title?.trim().toLowerCase() === item[0]?.trim().toLowerCase() && 
+                  const realProd = rawProducts.find(p =>
+                    p.title?.trim().toLowerCase() === item[0]?.trim().toLowerCase() &&
                     p.category?.trim().toLowerCase() === val[1]?.trim().toLowerCase()
                   );
                   if (!realProd) return null;
@@ -196,18 +187,18 @@ const Admin = () => {
                         <div className="fw-bold">{item[0]}</div>
                         <div className="small text-muted">{item[1]}</div>
                         {(realProd.custom_price1 > 0 || realProd.custom_price2 > 0 || realProd.custom_price3 > 0) && (
-                        <div className="small text-success fw-bold">
-                          Individuellt pris: {realProd.custom_price1}:- / {realProd.custom_price2}:- / {realProd.custom_price3}:-
-                        </div>
+                          <div className="small text-success fw-bold">
+                            Individuellt pris: {realProd.custom_price1}:- / {realProd.custom_price2}:- / {realProd.custom_price3}:-
+                          </div>
                         )}
                       </div>
                       <div className="d-flex">
                         <button className="btn btn-sm text-primary me-1" onClick={() => {
                           setEditTarget(realProd);
-                          setProdForm({ 
-                            selectedName: val[0], 
-                            selectedTitle: realProd.category, 
-                            title: realProd.title, 
+                          setProdForm({
+                            selectedName: val[0],
+                            selectedTitle: realProd.category,
+                            title: realProd.title,
                             desc: realProd.description,
                             cp1: realProd.custom_price1,
                             cp2: realProd.custom_price2,
@@ -227,77 +218,23 @@ const Admin = () => {
         ))}
       </div>
 
-      {/* MODAL KATEGORI */}
-      <div className="modal fade" id="catModal" tabIndex="-1" data-bs-backdrop="static">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header bg-dark text-white">
-              <h5 className="modal-title">{editTarget ? 'Ändra Prisklass' : 'Ny Prisklass'}</h5>
-              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" onClick={closeModals}></button>
-            </div>
-            <form onSubmit={(e) => { e.preventDefault(); handleSave('category', catForm); }}>
-              <div className="modal-body p-4">
-                <label className="small fw-bold">Huvudkategori (Sökfilter)</label>
-                <input type="text" className="form-control mb-3" value={catForm.name} onChange={e => setCatForm({...catForm, name: e.target.value})} required />
-                <label className="small fw-bold">Display-titel (Prisklassens namn)</label>
-                <input type="text" className="form-control mb-3" value={catForm.title} onChange={e => setCatForm({...catForm, title: e.target.value})} required />
-                <label className="small fw-bold">Priser (kr)</label>
-                <div className="row g-2 mb-3">
-                  <div className="col"><small>Avhämtning</small><input type="number" className="form-control" value={catForm.p1} onChange={e => setCatForm({...catForm, p1: e.target.value})} required /></div>
-                  <div className="col"><small>Servering</small><input type="number" className="form-control" value={catForm.p2} onChange={e => setCatForm({...catForm, p2: e.target.value})} /></div>
-                  <div className="col"><small>Familj</small><input type="number" className="form-control" value={catForm.p3} onChange={e => setCatForm({...catForm, p3: e.target.value})} /></div>
-                </div>
-                <label className="small fw-bold">Bild-URL</label>
-                <input type="text" className="form-control" value={catForm.img} onChange={e => setCatForm({...catForm, img: e.target.value})} />
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={closeModals}>Avbryt</button>
-                <button type="submit" className="btn btn-dark">Spara</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      <CategoryModal
+        editTarget={editTarget}
+        catForm={catForm}
+        setCatForm={setCatForm}
+        onClose={closeModals}
+        onSave={handleSave}
+      />
 
-      {/* MODAL PRODUKT */}
-      <div className="modal fade" id="prodModal" tabIndex="-1" data-bs-backdrop="static">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header bg-primary text-white">
-              <h5 className="modal-title">{editTarget ? 'Redigera Produkt' : 'Ny Produkt'}</h5>
-              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" onClick={closeModals}></button>
-            </div>
-            <form onSubmit={(e) => { e.preventDefault(); handleSave('product', prodForm); }}>
-              <div className="modal-body p-4">
-                <label className="small fw-bold">Huvudkategori</label>
-                <select className="form-select mb-3" value={prodForm.selectedName} onChange={e => setProdForm({...prodForm, selectedName: e.target.value, selectedTitle: ''})} required>
-                  <option value="">-- Välj --</option>
-                  {uniqueNames.map(n => <option key={n} value={n}>{n}</option>)}
-                </select>
-                <label className="small fw-bold">Prisklass</label>
-                <select className="form-select mb-3" value={prodForm.selectedTitle} onChange={e => setProdForm({...prodForm, selectedTitle: e.target.value})} disabled={!prodForm.selectedName} required>
-                  <option value="">-- Välj --</option>
-                  {filteredTitles.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-                <label className="small fw-bold mt-2">Individuella priser (lämna 0 för att använda kategorins pris)</label>
-                <div className="row g-2 mb-3">
-                  <div className="col"><small>Avh.</small><input type="number" className="form-control" value={prodForm.cp1} onChange={e => setProdForm({...prodForm, cp1: e.target.value})} /></div>
-                  <div className="col"><small>Serv.</small><input type="number" className="form-control" value={prodForm.cp2} onChange={e => setProdForm({...prodForm, cp2: e.target.value})} /></div>
-                  <div className="col"><small>Fam.</small><input type="number" className="form-control" value={prodForm.cp3} onChange={e => setProdForm({...prodForm, cp3: e.target.value})} /></div>
-                </div>
-                <input type="text" className="form-control mb-3" placeholder="Namn" value={prodForm.title} onChange={e => setProdForm({...prodForm, title: e.target.value})} required />
-                <input type="text" className="form-control mb-3" placeholder="Inviduell bild-URL här..." value={prodForm.cImg || ''} onChange={e => setProdForm({...prodForm, cImg: e.target.value})} />
-                <textarea className="form-control" rows="3" placeholder="Beskrivning" value={prodForm.desc} onChange={e => setProdForm({...prodForm, desc: e.target.value})} />
-               
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={closeModals}>Avbryt</button>
-                <button type="submit" className="btn btn-primary">Spara</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      <ProductModal
+        editTarget={editTarget}
+        prodForm={prodForm}
+        setProdForm={setProdForm}
+        onClose={closeModals}
+        onSave={handleSave}
+        uniqueNames={uniqueNames}
+        filteredTitles={filteredTitles}
+      />
     </div>
   );
 };
