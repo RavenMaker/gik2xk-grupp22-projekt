@@ -48,6 +48,7 @@ function ProductRating({ productId, initialRating, initialCount }) {
         </div>
     );
 }
+import ProductRating from '../components/ProductRating';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -73,11 +74,10 @@ export default function ProductDetail() {
   const idlist = {};
   let countingItems = 1;
   Object.entries(menuItem).forEach(([catKey, category]) => {
-      Object.keys(category[2].itemlist).forEach(itemKey => {
-          idlist[`${catKey}-${itemKey}`] = countingItems++;
-        });
-
-    }); 
+    Object.keys(category[2].itemlist).forEach(itemKey => {
+      idlist[`${catKey}-${itemKey}`] = countingItems++;
+    });
+  });
 
   useEffect(() => {
     if (!menuItem || Object.keys(menuItem).length === 0) return;
@@ -91,7 +91,7 @@ export default function ProductDetail() {
       Object.entries(itemlist).forEach(([itemKey, itemData]) => {
         const [namn, beskrivning, productId, avgRating, revCount, customP1, customP2, customP3, customImg] = itemData;
 
-      if (String(runningId) === String(id)) {
+        if (String(runningId) === String(id)) {
           foundProduct = {
             productId,
             namn,
@@ -144,9 +144,11 @@ export default function ProductDetail() {
           </div>
         </div>
 
-       
-        
-        <ProductRating productId={product.productId} initialRating={product.avgRating} initialCount={product.revCount} />
+        <ProductRating
+          productId={product.productId}
+          initialRating={product.avgRating}
+          initialCount={product.revCount}
+        />
 
         <Link to="/menu" className="btn btn-dark mt-3">
           Tillbaka till menyn

@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { API } from '../utils/api'
+import CartNavbar from '../components/CartNavbar'
+import PriceModal from '../components/PriceModal'
+import CategoryCard from '../components/CategoryCard'
 
+const API_URL = 'http://localhost:5000/api';
+const CART_KEY = 'guestCart'; // localStorage key
 
 const topCategories = [
     { href: "pizza",        img: "https://cdn-icons-png.flaticon.com/512/1404/1404945.png",     name: "Pizzor"},
@@ -16,10 +21,13 @@ const topCategories = [
     { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png",     name: "Extra tillägg" },
 ]
 
-function ProductRating({ productId, initialRating, initialCount }) {
-    const [rating, setRating] = useState(parseFloat(initialRating) || 0);
-    const [count, setCount] = useState(parseInt(initialCount) || 0);
-    const [hover, setHover] = useState(0);
+// --- localStorage helpers ---
+const loadCart = () => {
+    try {
+        const saved = localStorage.getItem(CART_KEY);
+        return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+};
 
     useEffect(() => {
         setRating(parseFloat(initialRating) || 0); 
@@ -61,18 +69,30 @@ function ProductRating({ productId, initialRating, initialCount }) {
         </div>
     );
 }
+const saveCart = (cart) => {
+    try {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {}
+};
 
 export default function Meny() {
     const [valdKategori, setValdKategori] = useState("")
-    const [menuItem, setMenuItem] = useState({}) 
-    const [loading, setLoading] = useState(true)  
-    const [error, setError] = useState(null)
-    const [cart, setCart] = useState([])
+    const [menuItem, setMenuItem] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [cart, setCart] = useState(loadCart) // load saved cart immediately
     const [showModal, setShowModal] = useState(false);
     const [activeProduct, setActiveProduct] = useState(null);
+    const [cartMessage, setCartMessage] = useState('');
 
+    // Persist cart to localStorage whenever it changes
     useEffect(() => {
         fetch(`${API}/products/menu`)
+        saveCart(cart);
+    }, [cart]);
+
+    // Fetch menu on mount
+    useEffect(() => {
+        fetch(`${API_URL}/products/menu`)
             .then(res => {
                 if (!res.ok) throw new Error("Servern svarade med fel")
                 return res.json()
@@ -88,28 +108,54 @@ export default function Meny() {
             })
     }, [])
 
-    const openPriceSelection = (productName, prices) => {
-        setActiveProduct({ name: productName, prices });
+    const openPriceSelection = (productName, prices, productId) => {
+        setActiveProduct({ name: productName, prices, productId });
         setShowModal(true);
     };
 
-    const addToCart = (productName, type, price) => {
-        setCart([...cart, { name: `${productName} (${type})`, price: price, id: Date.now() }]);
+    const addToCart = (productName, type, price, productId) => {
         setShowModal(false);
+
+        setCart(prev => {
+            // Use productId + type as key so "Pizza (Avh.)" and "Pizza (Serv.)" are separate
+            const key = `${productId}-${type}`;
+            const existing = prev.find(item => item.key === key);
+            let updated;
+            if (existing) {
+                updated = prev.map(item =>
+                    item.key === key ? { ...item, amount: item.amount + 1 } : item
+                );
+            } else {
+                updated = [...prev, {
+                    key,
+                    id: productId,
+                    name: `${productName} (${type})`,
+                    price,
+                    amount: 1
+                }];
+            }
+            return updated;
+        });
+
+        showMessage('Tillagd i varukorgen!');
     };
 
-    const removeFromCart = (id) => {
-        setCart(cart.filter(item => item.id !== id));
+    const removeFromCart = (key) => {
+        setCart(prev => prev.filter(item => item.key !== key));
+    };
+
+    const showMessage = (msg) => {
+        setCartMessage(msg);
+        setTimeout(() => setCartMessage(''), 2500);
     };
 
     const section = useRef(null)
     const scrollToSection = (elementRef) => {
         window.scrollTo({
-        top: elementRef.current.offsetTop,
-        behavior: "smooth",
+            top: elementRef.current.offsetTop,
+            behavior: "smooth",
         });
     };
-
 
     const itemIds = {};
     let idCounter = 1;
@@ -131,39 +177,19 @@ export default function Meny() {
         }
     });
 
-
-   
-
     return (
         <div className="menu-page">
-            {/* NAVBAR (Varukorg) - Från kod 1 */}
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
-                <div className="container">
-                    <div className="dropdown ms-auto">
-                        <button className="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            Varukorg ({cart.length})
-                        </button>
-                        <ul className="dropdown-menu dropdown-menu-end shadow p-2" style={{ minWidth: '280px' }}>
-                            {cart.length === 0 ? <li className="text-center p-2 text-muted">Tom</li> : (
-                                <>
-                                    {cart.map(item => (
-                                        <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom py-1 small">
-                                            <span>{item.name}</span>
-                                            <div>
-                                                <span className="me-2">{item.price}:-</span>
-                                                <button className="btn btn-sm text-danger p-0" onClick={() => removeFromCart(item.id)}>✖</button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                    <li className="fw-bold pt-2 text-end">Totalt: {cart.reduce((s, i) => s + i.price, 0)}:-</li>
-                                </>
-                            )}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <CartNavbar cart={cart} onRemove={removeFromCart} />
 
-            {/* Innehåll och Layout - Från kod 2 */}
+            {cartMessage && (
+                <div
+                    className="position-fixed bottom-0 end-0 m-3 alert alert-success shadow"
+                    style={{ zIndex: 9999, minWidth: '200px' }}
+                >
+                    {cartMessage}
+                </div>
+            )}
+
             <div className="container mt-4">
                 <h1 className="menu-title">Vår meny</h1>
                 <div className="row menu">
@@ -192,152 +218,25 @@ export default function Meny() {
                     {Object.entries(menuItem)
                         .filter(([catKey, c]) => valdKategori === "" || c[0].toLowerCase() === valdKategori.toLowerCase())
                         .map(([catKey, category], index) => (
-                            <CategoryCard 
-                                key={index} 
-                                category={category} 
+                            <CategoryCard
+                                key={index}
+                                category={category}
                                 catKey={catKey}
                                 itemIds={itemIds}
-                                idlist={idlist} 
-                                onAdd={openPriceSelection} 
+                                idlist={idlist}
+                                onAdd={openPriceSelection}
                             />
                         ))}
                 </div>
             </div>
 
-            {/* MODAL FÖR PRISVAL - Från kod 1 */}
-            {showModal && activeProduct && (
-                <div className="modal show d-block" style={{background: 'rgba(0,0,0,0.5)'}}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Välj storlek: {activeProduct.name}</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="d-grid gap-2">
-                                    {activeProduct.prices.p1 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Barn", activeProduct.prices.p1)}>Barn ({activeProduct.prices.p1}:-)</button>}
-                                    {activeProduct.prices.p2 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Standart", activeProduct.prices.p2)}>Standart ({activeProduct.prices.p2}:-)</button>}
-                                    {activeProduct.prices.p3 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Familj", activeProduct.prices.p3)}>Familj ({activeProduct.prices.p3}:-)</button>}
-                                    {activeProduct.prices.p4 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Glutenfri", activeProduct.prices.p4)}>Glutenfri ({activeProduct.prices.p4}:-)</button>}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {showModal && (
+                <PriceModal
+                    activeProduct={activeProduct}
+                    onAdd={addToCart}
+                    onClose={() => setShowModal(false)}
+                />
             )}
-        </div>
-    )
-}
-
-function CategoryCard({ category, catKey,itemIds, idlist, onAdd }) {
-    const [urlName, title, { price1, price2, price3, price4, imageClass, itemlist }] = category
-
-    
-
-    return (
-        <div className='pizza-category' >
-            <div className="pizza-header">
-                <h4 className="pizza-title">{title}</h4>
-                <div className="pizza-prices col-md-4">
-                    {price1 > 0 && <span>Barn. {price1}:-</span>}
-                    {price2 > 0 && <span>Standart. {price2}:-</span>}
-                    {price3 > 0 && <span>Familj. {price3}:-</span>}
-                    {price4 > 0 && <span>Glutenfri. {price4}:-</span>}
-                </div>
-            </div>
-
-            <div className="row align-items-center g-4">
-                <div className="col-md-4 text-center">
-                    <img src={imageClass} alt={title} className="pizza-img" />
-                </div>
-                <div className="col-md-8">
-                    <ol className="pizza-list">
-                        {Object.entries(itemlist).map(([itemKey, itemData]) => {
-                            // Vi packar upp hela arrayen. customP1 osv är de priser vi sparat på produkten.
-                            const [namn, beskrivning, id, avgRating, revCount, customP1, customP2, customP3, customP4] = itemData;
-
-                            // Logik: Om produkten har ett eget pris (> 0), använd det. Annars använd kategorins pris.
-                            const productPrices = {
-                                p1: customP1 > 0 ? customP1 : price1,
-                                p2: customP2 > 0 ? customP2 : price2,
-                                p3: customP3 > 0 ? customP3 : price3,
-                                p4: customP4 > 0 ? customP4 : price4 // Vi har inte stöd för customP4 än, så vi skickar bara kategorins glutenfria pris
-                            };
-                            const ProductPricesMessege={
-                                p1Message: "Barn:" + productPrices.p1 +":-",
-                                p2Message: "Standart:" + productPrices.p2 +":-",
-                                p3Message: "Familj:" + productPrices.p3 +":-",
-                                p4Message: "Glutenfri:" + productPrices.p4 +":-"
-                            }
-
-                            return (
-                                <li key={itemKey} className="Pizza-discription mb-3">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <div className='d-flex flex-column'>
-                                            <Link to={`/product/${idlist[`${catKey}-${itemKey}`]}`} className="text-dark text-decoration-none">
-                                                <div style={{ flex: 1 }}>
-                                                    <strong>
-                                                        {itemIds[`${catKey}-${itemKey}`]
-                                                        ? `${itemIds[`${catKey}-${itemKey}`]}. `
-                                                        : ""}
-                                                        {namn}
-                                                    </strong>
-                                                
-                                                {" – "}
-                                                {beskrivning}   
-                                                </div>
-                                            </Link>
-                                            <div className='priceing-Invidual'>
-                                                {(customP1 > 0 ) && (
-                                                <div className="small mt-1">
-                                                    <span className="badge bg-light text-dark border">
-                                                        {ProductPricesMessege.p1Message} 
-                                                    </span>
-                                                </div>
-                                                )}
-                                                {(customP2 > 0 ) && (
-                                                    <div className="small mt-1">
-                                                        <span className="badge bg-light text-dark border">
-                                                            {ProductPricesMessege.p2Message} 
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {(customP3 > 0 ) && (
-                                                    <div className="small mt-1">
-                                                        <span className="badge bg-light text-dark border">
-                                                            {ProductPricesMessege.p3Message} 
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                
-                                                {(customP4 > 0 ) && (
-                                                    <div className="small mt-1">
-                                                        <span className="badge bg-light text-dark border">
-                                                            {ProductPricesMessege.p4Message} 
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                       
-                                        
-                                        <div className="d-flex align-items-center">
-                                            
-                                             
-                                            {/* Skicka med de specifika produktpriserna till onAdd */}
-                                            <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, productPrices)}>
-                                                + Lägg till
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                    
-                                </li>
-                            );
-                        })}
-                    </ol>
-                </div>
-            </div>
         </div>
     )
 }
