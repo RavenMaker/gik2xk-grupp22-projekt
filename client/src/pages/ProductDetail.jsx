@@ -1,30 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const fallbackData = {
-  Category1: ['Pizza', 'Pizza Class 1', {
-    price1: 100,
-    price2: 120,
-    price3: 259,
-    imageClass: "/images/Vesuvio_pizza.jpeg",
-    itemlist: {
-      item1: ["Margherita Pizza", "En klassisk pizzamåltid med tomatsås, mozzarella och basilika."],
-      item2: ["Pepperoni Pizza", "En populär pizzamåltid med tomatsås, mozzarella och pepperoni."],
-      item3: ["Hawaiian Pizza", "En fruktig pizzamåltid med tomatsås, mozzarella och ananas."]
-    }
-  }],
-  Category2: ['Pizza', 'Pizza Class 2', {
-    price1: 125,
-    price2: 170,
-    price3: 270,
-    imageClass: "/images/Budapest_pizza.jpeg",
-    itemlist: {
-      item1: ["Kebab Pizza", "Kebab, ost, tomatsås"],
-      item2: ["Hawaii Special", "Ananas, banan, skinka, ost"],
-      item3: ["Calzone", "Inbakad pizza med ost, tomatsås"]
-    }
-  }]
-};
+
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -100,7 +77,7 @@ export default function ProductDetail() {
     <div className="container mt-5 mb-5">
       <div className="card shadow p-4">
         <h1>{product.namn}</h1>
-        <p className="text-muted">{product.categoryTitle}</p>
+        <p className="text-muted ">{product.categoryTitle}</p>
 
         <p>{product.beskrivning}</p>
 
