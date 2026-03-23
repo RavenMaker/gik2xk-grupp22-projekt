@@ -208,7 +208,7 @@ const Admin = () => {
                           new window.bootstrap.Modal(document.getElementById('prodModal')).show();
                         }}>Redigera</button>
                         <button className="btn btn-sm btn-danger rounded-circle" onClick={() => handleDelete(realProd.id)}>&times;</button>
-                      </div>
+                      </div> 
                     </li>
                   );
                 })}

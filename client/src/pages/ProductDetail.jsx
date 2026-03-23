@@ -23,7 +23,7 @@ export default function ProductDetail() {
       });
   }, []);
 
-  const idlist = {};
+  const idlist = {}; 
   let countingItems = 1;
   Object.entries(menuItem).forEach(([catKey, category]) => {
     Object.keys(category[2].itemlist).forEach(itemKey => {

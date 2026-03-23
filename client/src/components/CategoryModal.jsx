@@ -30,7 +30,7 @@ export default function CategoryModal({ editTarget, catForm, setCatForm, onClose
                                 <div className="col">
                                     <small>Avhämtning</small>
                                     <input type="number" className="form-control" value={catForm.p1} onChange={e => setCatForm({ ...catForm, p1: e.target.value })} required />
-                                </div>
+                                </div> 
                                 <div className="col">
                                     <small>Servering</small>
                                     <input type="number" className="form-control" value={catForm.p2} onChange={e => setCatForm({ ...catForm, p2: e.target.value })} />

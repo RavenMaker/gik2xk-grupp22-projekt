@@ -85,7 +85,7 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                                 </li>
                             );
                         })}
-                    </ol>
+                    </ol> 
                 </div>
             </div>
         </div>
