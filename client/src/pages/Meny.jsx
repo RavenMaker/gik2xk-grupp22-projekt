@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const topCategories = [
     { href: "pizza",        img: "https://cdn-icons-png.flaticon.com/512/1404/1404945.png", name: "Pizzor"},
@@ -300,7 +301,17 @@ function CategoryCard({ category, catKey, itemIds, onAdd }) {
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div className='d-flex flex-column'>
                                             <div style={{ flex: 1 }}>
-                                                <strong>{itemIds[`${catKey}-${itemKey}`] ? `${itemIds[`${catKey}-${itemKey}`]}. ` : ""}{namn}</strong> – {beskrivning}
+                                             <Link to={`/product/${itemIds[`${catKey}-${itemKey}`]}`} className="text-dark text-decoration-none">
+                                                  <strong>
+                                                     {itemIds[`${catKey}-${itemKey}`]
+                                                       ? `${itemIds[`${catKey}-${itemKey}`]}. `
+                                                       : ""}
+                                                       {namn}
+                                                 </strong>
+                                             </Link>
+                                              {" – "}
+                                              {beskrivning}
+                                                
                                             </div>
                                             <div className='priceing-Invidual'>
                                                 {(customP1 > 0 ) && (

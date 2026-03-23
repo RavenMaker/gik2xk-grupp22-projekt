@@ -5,6 +5,7 @@ import Menu from './pages/Meny.jsx'
 import Lunch from './pages/Lunch.jsx'
 import Singin from './pages/Singin.jsx'
 import Admin from './pages/Admin.jsx'
+import ProductDetail from "./pages/ProductDetail.jsx";
 import './App.css'
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
             <Route path="/lunch"   element={<Lunch />} />
             <Route path="/singIn"   element={<Singin />} />
             <Route path="/admin"   element={<Admin />} />
+            <Route path="/product/:id"   element={<ProductDetail />} />
+
           </Routes>
 
             <footer className="site-footer">
