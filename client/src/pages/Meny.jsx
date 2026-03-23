@@ -111,7 +111,7 @@ export default function Meny() {
     const itemIds = {};
     let idCounter = 1;
     Object.entries(menuItem).forEach(([catKey, category]) => {
-        if (category[0] && category[0].toLowerCase()) {
+        if (category[0] && category[0].toLowerCase() === "pizza") {
             Object.keys(category[2].itemlist).forEach(itemKey => {
                 itemIds[`${catKey}-${itemKey}`] = idCounter++;
             });

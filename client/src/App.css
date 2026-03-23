@@ -1,10 +1,10 @@
 .custom-navbar {
-  background: linear-gradient(135deg, #ff7a00, #ff9a2f);
+  background:black;
 }
 
 /* Text färg */
 .custom-navbar .navbar-brand {
-  color: #fff;
+  color:#ff7a00;
   font-weight: 800;
 }
 
@@ -360,7 +360,7 @@
 
 /* Inputfält */
 .lunch-page input {
-  border-radius: 8px;
+  border-radius: 0.8rem;
   border: 1px solid #ccc;
-  padding: 8px 10px;
+  padding: 0.8rem 1rem;
 }

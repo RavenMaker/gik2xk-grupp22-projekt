@@ -74,7 +74,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="container mt-5 mb-5">
+    <div className="container mt-5 mb-5 product-detail">
       <div className="card shadow p-4">
         <h1>{product.namn}</h1>
         <p className="text-muted ">{product.categoryTitle}</p>
