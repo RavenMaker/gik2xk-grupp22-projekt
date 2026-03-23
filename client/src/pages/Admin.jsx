@@ -9,7 +9,7 @@ const Admin = () => {
   const [catForm, setCatForm] = useState({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
   const [prodForm, setProdForm] = useState({ 
     selectedName: '', selectedTitle: '', title: '', desc: '', 
-    cp1: 0, cp2: 0, cp3: 0 // Lägg till dessa
+    cp1: 0, cp2: 0, cp3: 0, cImg: ''// Lägg till dessa
   });
 
   const API_URL = 'http://localhost:5000/api/products';
@@ -75,7 +75,8 @@ const Admin = () => {
           custom_price1: Number(data.cp1) || 0,
           custom_price2: Number(data.cp2) || 0,
           custom_price3: Number(data.cp3) || 0,
-          image_url: catPrices.image_url
+          image_url: catPrices.image_url,
+          custom_image_pruduct: data.cImg
         };
       }
 
@@ -115,7 +116,7 @@ const Admin = () => {
   const closeModals = () => {
     setEditTarget(null);
     setCatForm({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
-    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1:0, cp2:0, cp3:0 });
+    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1:0, cp2:0, cp3:0, cImg:'' });
     document.querySelectorAll('.modal').forEach(el => {
       const m = window.bootstrap.Modal.getInstance(el);
       if (m) m.hide();
@@ -131,7 +132,8 @@ const Admin = () => {
       image_url: cat[2].imageClass,
       cprice1: cat[2].cp1,
       cprice2: cat[2].cp2,
-      cprice3: cat[2].cp3
+      cprice3: cat[2].cp3,
+      cImg: cat[2].cImg
     } : { 
       price1: 0, 
       price2: 0, 
@@ -139,7 +141,8 @@ const Admin = () => {
       image_url: '',
       cprice1: 0, 
       cprice2: 0,
-      cprice3: 0
+      cprice3: 0,
+      cImg:''
     };
   };
 
@@ -208,7 +211,8 @@ const Admin = () => {
                             desc: realProd.description,
                             cp1: realProd.custom_price1,
                             cp2: realProd.custom_price2,
-                            cp3: realProd.custom_price3
+                            cp3: realProd.custom_price3,
+                            cImg: realProd.custom_image_pruduct || ''
                           });
                           new window.bootstrap.Modal(document.getElementById('prodModal')).show();
                         }}>Redigera</button>
@@ -282,7 +286,9 @@ const Admin = () => {
                   <div className="col"><small>Fam.</small><input type="number" className="form-control" value={prodForm.cp3} onChange={e => setProdForm({...prodForm, cp3: e.target.value})} /></div>
                 </div>
                 <input type="text" className="form-control mb-3" placeholder="Namn" value={prodForm.title} onChange={e => setProdForm({...prodForm, title: e.target.value})} required />
+                <input type="text" className="form-control mb-3" placeholder="Inviduell bild-URL här..." value={prodForm.cImg || ''} onChange={e => setProdForm({...prodForm, cImg: e.target.value})} />
                 <textarea className="form-control" rows="3" placeholder="Beskrivning" value={prodForm.desc} onChange={e => setProdForm({...prodForm, desc: e.target.value})} />
+               
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={closeModals}>Avbryt</button>
