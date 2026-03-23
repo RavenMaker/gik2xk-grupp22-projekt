@@ -14,7 +14,7 @@ const Admin = () => {
     cp1: 0, cp2: 0, cp3: 0, cImg: ''
   });
 
-  const API_URL = 'http://localhost:5000/api/products';
+  const API_URL = `${API}/products`;
 
   const fetchData = async () => {
     try {

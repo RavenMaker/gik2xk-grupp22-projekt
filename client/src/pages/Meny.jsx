@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import CartNavbar from '../components/CartNavbar'
 import PriceModal from '../components/PriceModal'
 import CategoryCard from '../components/CategoryCard'
-
-const API_URL = 'http://localhost:5000/api';
+import { API } from '../utils/api'
 const CART_KEY = 'guestCart'; // localStorage key
 
 const topCategories = [
@@ -37,6 +36,7 @@ export default function Meny() {
     const [valdKategori, setValdKategori] = useState("")
     const [menuItem, setMenuItem] = useState({})
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const [cart, setCart] = useState(loadCart) // load saved cart immediately
     const [showModal, setShowModal] = useState(false);
     const [activeProduct, setActiveProduct] = useState(null);
@@ -49,7 +49,7 @@ export default function Meny() {
 
     // Fetch menu on mount
     useEffect(() => {
-        fetch(`${API_URL}/products/menu`)
+        fetch(`${API}/products/menu`)
             .then(res => {
                 if (!res.ok) throw new Error("Servern svarade med fel")
                 return res.json()
@@ -61,6 +61,7 @@ export default function Meny() {
             .catch(err => {
                 console.error("Fel vid hämtning:", err)
                 setLoading(false)
+                setError(err)
             })
     }, [])
 

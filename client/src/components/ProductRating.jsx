@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API } from '../utils/api'
 
 export default function ProductRating({ productId, initialRating, initialCount }) {
     const [rating, setRating] = useState(parseFloat(initialRating) || 0);
@@ -11,7 +12,7 @@ export default function ProductRating({ productId, initialRating, initialCount }
     }, [initialRating, initialCount]);
 
     const saveRating = async (val) => {
-        const res = await fetch(`http://localhost:5000/api/products/${productId}/rate`, {
+        const res = await fetch(`${API}/products/${productId}/rate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ rating: val })

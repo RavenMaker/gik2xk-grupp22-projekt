@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { API } from '../utils/api'
 import ProductRating from '../components/ProductRating';
 
 export default function ProductDetail() {
@@ -10,7 +11,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products/menu")
+    fetch(`${API}/products/menu`)
       .then((res) => {
         if (!res.ok) throw new Error("Serverfel");
         return res.json();
