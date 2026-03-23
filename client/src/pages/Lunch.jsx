@@ -19,7 +19,7 @@ export default function Meny() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('edit') === 'true') {
-      setIsAdmin(true); 
+      setIsAdmin(true);
       setEditMode(true);
     }
 

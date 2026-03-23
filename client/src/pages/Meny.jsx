@@ -135,7 +135,7 @@ export default function Meny() {
 
     return (
         <div className="menu-page">
-            <CartNavbar cart={cart} onRemove={removeFromCart} /> 
+            <CartNavbar cart={cart} onRemove={removeFromCart} />
 
             {cartMessage && (
                 <div

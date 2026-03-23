@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { API } from '../utils/api'
 import CategoryModal from '../components/CategoryModal';
 import ProductModal from '../components/ProductModal';
 
@@ -15,7 +14,7 @@ const Admin = () => {
     cp1: 0, cp2: 0, cp3: 0, cImg: ''
   });
 
-  const API_URL = `${API}/products`;
+  const API_URL = 'http://localhost:5000/api/products';
 
   const fetchData = async () => {
     try {
