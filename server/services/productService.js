@@ -21,7 +21,8 @@ const productService = {
       reviewCount: ratings.length,        // ANTAL personer som röstat
       custom_price1: plainProduct.custom_price1,
       custom_price2: plainProduct.custom_price2,
-      custom_price3: plainProduct.custom_price3
+      custom_price3: plainProduct.custom_price3,
+      custom_image_pruduct: plainProduct.custom_image_pruduct
     };
   },
 
@@ -72,7 +73,8 @@ const productService = {
             ratings.length,
             it.custom_price1 || 0,
             it.custom_price2 || 0,
-            it.custom_price3 || 0
+            it.custom_price3 || 0,
+            it.custom_image_pruduct
           ];
         }
       });
