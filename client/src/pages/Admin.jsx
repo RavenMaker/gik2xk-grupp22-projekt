@@ -42,6 +42,7 @@ const Admin = () => {
         p1: catInfo.price1,
         p2: catInfo.price2,
         p3: catInfo.price3,
+        p4: catInfo.price4,
         img: catInfo.image_url
       });
       new window.bootstrap.Modal(document.getElementById('catModal')).show();
@@ -63,6 +64,7 @@ const Admin = () => {
         price1: Number(data.p1) || 0,
         price2: Number(data.p2) || 0,
         price3: Number(data.p3) || 0,
+        price4: Number(data.p4) || 0,
         image_url: data.img
       };
     } else {
@@ -74,6 +76,7 @@ const Admin = () => {
         custom_price1: Number(data.cp1) || 0,
         custom_price2: Number(data.cp2) || 0,
         custom_price3: Number(data.cp3) || 0,
+        custom_price4: Number(data.cp4) || 0,
         image_url: catPrices.image_url,
         custom_image_pruduct: data.cImg
       };
@@ -128,14 +131,16 @@ const Admin = () => {
       price1: cat[2].price1,
       price2: cat[2].price2,
       price3: cat[2].price3,
+      price4: cat[2].price4,
       image_url: cat[2].imageClass,
       cprice1: cat[2].cp1,
       cprice2: cat[2].cp2,
       cprice3: cat[2].cp3,
+      cprice4: cat[2].cp4,
       cImg: cat[2].cImg
     } : {
-      price1: 0, price2: 0, price3: 0, image_url: '',
-      cprice1: 0, cprice2: 0, cprice3: 0, cImg: ''
+      price1: 0, price2: 0, price3: 0, price4: 0, image_url: '',
+      cprice1: 0, cprice2: 0, cprice3: 0, cprice4: 0, cImg: ''
     };
   };
 
@@ -163,7 +168,7 @@ const Admin = () => {
                 <div>
                   <h5 className="mb-0 fw-bold">{val[1]}</h5>
                   <small className="text-muted text-uppercase" style={{ fontSize: '0.7rem' }}>
-                    Filter: <strong>{val[0]}</strong> | {val[2].price1}:- / {val[2].price2}:- / {val[2].price3}:-
+                    Filter: <strong>{val[0]}</strong> | {val[2].price1}:- / {val[2].price2}:- / {val[2].price3}:- / {val[2].price4}:- 
                   </small>
                 </div>
                 <div className="btn-group">
@@ -186,9 +191,9 @@ const Admin = () => {
                       <div>
                         <div className="fw-bold">{item[0]}</div>
                         <div className="small text-muted">{item[1]}</div>
-                        {(realProd.custom_price1 > 0 || realProd.custom_price2 > 0 || realProd.custom_price3 > 0) && (
+                        {(realProd.custom_price1 > 0 || realProd.custom_price2 > 0 ||  realProd.custom_price3 > 0 || realProd.custom_price4 > 0) && (
                           <div className="small text-success fw-bold">
-                            Individuellt pris: {realProd.custom_price1}:- / {realProd.custom_price2}:- / {realProd.custom_price3}:-
+                            Individuellt pris: {realProd.custom_price1}:- / {realProd.custom_price2}:- / {realProd.custom_price3}:- / {realProd.custom_price4}:-
                           </div>
                         )}
                       </div>
@@ -203,6 +208,7 @@ const Admin = () => {
                             cp1: realProd.custom_price1,
                             cp2: realProd.custom_price2,
                             cp3: realProd.custom_price3,
+                            cp4: realProd.custom_price4,
                             cImg: realProd.custom_image_pruduct || ''
                           });
                           new window.bootstrap.Modal(document.getElementById('prodModal')).show();

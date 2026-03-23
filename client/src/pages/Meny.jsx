@@ -74,7 +74,7 @@ export default function Meny() {
         setShowModal(false);
 
         setCart(prev => {
-            // Use productId + type as key so "Pizza (Avh.)" and "Pizza (Serv.)" are separate
+            
             const key = `${productId}-${type}`;
             const existing = prev.find(item => item.key === key);
             let updated;

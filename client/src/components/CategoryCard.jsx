@@ -9,9 +9,9 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
             <div className="pizza-header">
                 <h4 className="pizza-title">{title}</h4>
                 <div className="pizza-prices col-md-4">
-                    {price1 > 0 && <span>avh. {price1}:-</span>}
-                    {price2 > 0 && <span>serv. {price2}:-</span>}
-                    {price3 > 0 && <span>familj. {price3}:-</span>}
+                    {price1 > 0 && <span>Barn {price1}:-</span>}
+                    {price2 > 0 && <span>Standart {price2}:-</span>}
+                    {price3 > 0 && <span>Familj {price3}:-</span>}
                 </div>
             </div>
 
@@ -31,9 +31,10 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                                 p3: customP3 > 0 ? customP3 : price3
                             };
                             const ProductPricesMessege = {
-                                p1Message: "Avh:" + productPrices.p1 + ":-",
-                                p2Message: "Serv:" + productPrices.p2 + ":-",
+                                p1Message: "Barn:" + productPrices.p1 + ":-",
+                                p2Message: "Standard:" + productPrices.p2 + ":-",
                                 p3Message: "Familj:" + productPrices.p3 + ":-",
+                                p3Message: "Glutenfri:" + productPrices.p4 + ":-",
                             };
 
                             return (

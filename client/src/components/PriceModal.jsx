@@ -12,18 +12,23 @@ export default function PriceModal({ activeProduct, onAdd, onClose }) {
                     <div className="modal-body">
                         <div className="d-grid gap-2">
                             {activeProduct.prices.p1 > 0 && (
-                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Avh.", activeProduct.prices.p1, activeProduct.productId)}>
-                                    Avhämtning ({activeProduct.prices.p1}:-)
+                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Barn", activeProduct.prices.p1, activeProduct.productId)}>
+                                    Barn ({activeProduct.prices.p1}:-)
                                 </button>
                             )}
                             {activeProduct.prices.p2 > 0 && (
-                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Serv.", activeProduct.prices.p2, activeProduct.productId)}>
-                                    Servering ({activeProduct.prices.p2}:-)
+                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Standard", activeProduct.prices.p2, activeProduct.productId)}>
+                                    Standard ({activeProduct.prices.p2}:-)
                                 </button>
                             )}
                             {activeProduct.prices.p3 > 0 && (
                                 <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Familj", activeProduct.prices.p3, activeProduct.productId)}>
                                     Familjepizza ({activeProduct.prices.p3}:-)
+                                </button>
+                            )}
+                             {activeProduct.prices.p4 > 0 && (
+                                <button className="btn btn-outline-dark" onClick={() => onAdd(activeProduct.name, "Glutenfri", activeProduct.prices.p4, activeProduct.productId)}>
+                                    Glutenfri ({activeProduct.prices.p4}:-)
                                 </button>
                             )}
                         </div>

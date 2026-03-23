@@ -39,7 +39,7 @@ export default function ProductDetail() {
     let runningId = 1;
 
     Object.entries(menuItem).forEach(([catKey, category]) => {
-      const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category;
+      const [urlName, title, { price1, price2, price3, price4, imageClass, itemlist }] = category;
 
       Object.entries(itemlist).forEach(([itemKey, itemData]) => {
         const [namn, beskrivning, productId, avgRating, revCount, customP1, customP2, customP3, customImg] = itemData;

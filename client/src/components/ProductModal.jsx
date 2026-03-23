@@ -35,16 +35,20 @@ export default function ProductModal({ editTarget, prodForm, setProdForm, onClos
                             <label className="small fw-bold mt-2">Individuella priser (lämna 0 för att använda kategorins pris)</label>
                             <div className="row g-2 mb-3">
                                 <div className="col">
-                                    <small>Avh.</small>
+                                    <small>Barn</small>
                                     <input type="number" className="form-control" value={prodForm.cp1} onChange={e => setProdForm({ ...prodForm, cp1: e.target.value })} />
                                 </div>
                                 <div className="col">
-                                    <small>Serv.</small>
+                                    <small>Standard</small>
                                     <input type="number" className="form-control" value={prodForm.cp2} onChange={e => setProdForm({ ...prodForm, cp2: e.target.value })} />
                                 </div>
                                 <div className="col">
-                                    <small>Fam.</small>
+                                    <small>Familj</small>
                                     <input type="number" className="form-control" value={prodForm.cp3} onChange={e => setProdForm({ ...prodForm, cp3: e.target.value })} />
+                                </div>
+                                <div className="col">
+                                    <small>Glutenfri</small>
+                                    <input type="number" className="form-control" value={prodForm.cp4} onChange={e => setProdForm({ ...prodForm, cp4: e.target.value })} />
                                 </div>
                             </div>
 
