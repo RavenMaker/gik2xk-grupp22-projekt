@@ -260,9 +260,7 @@
 .lunch-list li {
   margin-bottom: 8px;
 }
-.lunch-list li::marker {
-  display: none;
-}
+
 .lunch-page {
   min-height:100vh;
   background:url("/imges/wood.webp");
