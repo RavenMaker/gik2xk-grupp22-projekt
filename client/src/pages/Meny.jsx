@@ -100,6 +100,7 @@ export default function Meny() {
     const removeFromCart = (id) => {
         setCart(cart.filter(item => item.id !== id));
     };
+
     const section = useRef(null)
     const scrollToSection = (elementRef) => {
         window.scrollTo({
@@ -107,6 +108,7 @@ export default function Meny() {
         behavior: "smooth",
         });
     };
+
 
     const itemIds = {};
     let idCounter = 1;
@@ -117,6 +119,18 @@ export default function Meny() {
             });
         }
     });
+
+    const idlist = {};
+    let countingItems = 1;
+    Object.entries(menuItem).forEach(([catKey, category]) => {
+        if (category[0] && category[0].toLowerCase()) {
+            Object.keys(category[2].itemlist).forEach(itemKey => {
+                idlist[`${catKey}-${itemKey}`] = countingItems++;
+            });
+        }
+    });
+
+
    
 
     return (
@@ -180,8 +194,9 @@ export default function Meny() {
                             <CategoryCard 
                                 key={index} 
                                 category={category} 
-                                catKey={catKey} 
-                                itemIds={itemIds} 
+                                catKey={catKey}
+                                itemIds={itemIds}
+                                idlist={idlist} 
                                 onAdd={openPriceSelection} 
                             />
                         ))}
@@ -212,7 +227,7 @@ export default function Meny() {
     )
 }
 
-function CategoryCard({ category, catKey, itemIds, onAdd }) {
+function CategoryCard({ category, catKey,itemIds, idlist, onAdd }) {
     const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category
 
     
@@ -254,19 +269,19 @@ function CategoryCard({ category, catKey, itemIds, onAdd }) {
                                 <li key={itemKey} className="Pizza-discription mb-3">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div className='d-flex flex-column'>
-                                            <div style={{ flex: 1 }}>
-                                             <Link to={`/product/${itemIds[`${catKey}-${itemKey}`]}`} className="text-dark text-decoration-none">
-                                                  <strong>
-                                                     {itemIds[`${catKey}-${itemKey}`]
-                                                       ? `${itemIds[`${catKey}-${itemKey}`]}. `
-                                                       : ""}
-                                                       {namn}
-                                                 </strong>
-                                             </Link>
-                                              {" – "}
-                                              {beskrivning}
+                                            <Link to={`/product/${idlist[`${catKey}-${itemKey}`]}`} className="text-dark text-decoration-none">
+                                                <div style={{ flex: 1 }}>
+                                                    <strong>
+                                                        {itemIds[`${catKey}-${itemKey}`]
+                                                        ? `${itemIds[`${catKey}-${itemKey}`]}. `
+                                                        : ""}
+                                                        {namn}
+                                                    </strong>
                                                 
-                                            </div>
+                                                {" – "}
+                                                {beskrivning}   
+                                                </div>
+                                            </Link>
                                             <div className='priceing-Invidual'>
                                                 {(customP1 > 0 ) && (
                                                 <div className="small mt-1">
@@ -294,9 +309,8 @@ function CategoryCard({ category, catKey, itemIds, onAdd }) {
                                        
                                         
                                         <div className="d-flex align-items-center">
-                                           
-                                            <ProductRating productId={id} initialRating={avgRating} initialCount={revCount} />
                                             
+                                             
                                             {/* Skicka med de specifika produktpriserna till onAdd */}
                                             <button className="btn btn-sm btn-success ms-3" onClick={() => onAdd(namn, productPrices)}>
                                                 + Lägg till
