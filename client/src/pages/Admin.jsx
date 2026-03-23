@@ -141,7 +141,7 @@ const Admin = () => {
       image_url: '',
       cprice1: 0, 
       cprice2: 0,
-      cprice3: 0,
+      cprice3: 0, 
       cImg:''
     };
   };
