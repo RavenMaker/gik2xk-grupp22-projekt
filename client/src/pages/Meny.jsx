@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 
 const topCategories = [
-    { href: "pizza",        img: "https://cdn-icons-png.flaticon.com/512/1404/1404945.png", name: "Pizzor"},
-    { href: "hamburgare",   img: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png", name: "Hamburgare" },
-    { href: "kebabratter",  img: "https://cdn-icons-png.flaticon.com/512/706/706893.png",   name: "Kebabrätter" },
-    { href: "alacarte",     img: "https://cdn-icons-png.flaticon.com/512/11790/11790156.png", name: "À la carte" },
-    { href: "rullar",       img: "https://cdn-icons-png.flaticon.com/512/8616/8616731.png", name: "Rullar" },
-    { href: "salad",        img: "https://cdn-icons-png.flaticon.com/512/2515/2515183.png", name: "vegetarian" },
-    { href: "husman",       img: "https://cdn-icons-png.flaticon.com/512/3480/3480823.png", name: "Husman" },
-    { href: "pastaratter",  img: "https://cdn-icons-png.flaticon.com/512/4465/4465494.png", name: "Pastarätter" },
-    { href: "dryck",        img: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png", name: "Våra drycker" },
-    { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png", name: "Extra tillägg" },
+    { href: "pizza",        img: "https://cdn-icons-png.flaticon.com/512/1404/1404945.png",     name: "Pizzor"},
+    { href: "hamburgare",   img: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",     name: "Hamburgare" },
+    { href: "kebabratter",  img: "https://cdn-icons-png.flaticon.com/512/706/706893.png",       name: "Kebabrätter" },
+    { href: "alacarte",     img: "https://cdn-icons-png.flaticon.com/512/11790/11790156.png",   name: "À la carte" },
+    { href: "rullar",       img: "https://cdn-icons-png.flaticon.com/512/8616/8616731.png",     name: "Rullar" },
+    { href: "salad",        img: "https://cdn-icons-png.flaticon.com/512/2515/2515183.png",     name: "Salad" },
+    { href: "husman",       img: "https://cdn-icons-png.flaticon.com/512/3480/3480823.png",     name: "Husman" },
+    { href: "pastaratter",  img: "https://cdn-icons-png.flaticon.com/512/4465/4465494.png",     name: "Pastarätter" },
+    { href: "dryck",        img: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png",     name: "Våra drycker" },
+    { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png",     name: "Extra tillägg" },
 ]
 
 function ProductRating({ productId, initialRating, initialCount }) {
