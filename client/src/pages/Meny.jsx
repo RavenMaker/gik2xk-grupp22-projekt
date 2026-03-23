@@ -214,9 +214,10 @@ export default function Meny() {
                             </div>
                             <div className="modal-body">
                                 <div className="d-grid gap-2">
-                                    {activeProduct.prices.p1 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Avh.", activeProduct.prices.p1)}>Avhämtning ({activeProduct.prices.p1}:-)</button>}
-                                    {activeProduct.prices.p2 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Serv.", activeProduct.prices.p2)}>Servering ({activeProduct.prices.p2}:-)</button>}
-                                    {activeProduct.prices.p3 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Familj", activeProduct.prices.p3)}>Familjepizza ({activeProduct.prices.p3}:-)</button>}
+                                    {activeProduct.prices.p1 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Barn", activeProduct.prices.p1)}>Barn ({activeProduct.prices.p1}:-)</button>}
+                                    {activeProduct.prices.p2 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Standart", activeProduct.prices.p2)}>Standart ({activeProduct.prices.p2}:-)</button>}
+                                    {activeProduct.prices.p3 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Familj", activeProduct.prices.p3)}>Familj ({activeProduct.prices.p3}:-)</button>}
+                                    {activeProduct.prices.p4 > 0 && <button className="btn btn-outline-dark" onClick={() => addToCart(activeProduct.name, "Glutenfri", activeProduct.prices.p4)}>Glutenfri ({activeProduct.prices.p4}:-)</button>}
                                 </div>
                             </div>
                         </div>
@@ -228,7 +229,7 @@ export default function Meny() {
 }
 
 function CategoryCard({ category, catKey,itemIds, idlist, onAdd }) {
-    const [urlName, title, { price1, price2, price3, imageClass, itemlist }] = category
+    const [urlName, title, { price1, price2, price3, price4, imageClass, itemlist }] = category
 
     
 
@@ -237,9 +238,10 @@ function CategoryCard({ category, catKey,itemIds, idlist, onAdd }) {
             <div className="pizza-header">
                 <h4 className="pizza-title">{title}</h4>
                 <div className="pizza-prices col-md-4">
-                    {price1 > 0 && <span>avh. {price1}:-</span>}
-                    {price2 > 0 && <span>serv. {price2}:-</span>}
-                    {price3 > 0 && <span>familj. {price3}:-</span>}
+                    {price1 > 0 && <span>Barn. {price1}:-</span>}
+                    {price2 > 0 && <span>Standart. {price2}:-</span>}
+                    {price3 > 0 && <span>Familj. {price3}:-</span>}
+                    {price4 > 0 && <span>Glutenfri. {price4}:-</span>}
                 </div>
             </div>
 
@@ -251,18 +253,20 @@ function CategoryCard({ category, catKey,itemIds, idlist, onAdd }) {
                     <ol className="pizza-list">
                         {Object.entries(itemlist).map(([itemKey, itemData]) => {
                             // Vi packar upp hela arrayen. customP1 osv är de priser vi sparat på produkten.
-                            const [namn, beskrivning, id, avgRating, revCount, customP1, customP2, customP3] = itemData;
+                            const [namn, beskrivning, id, avgRating, revCount, customP1, customP2, customP3, customP4] = itemData;
 
                             // Logik: Om produkten har ett eget pris (> 0), använd det. Annars använd kategorins pris.
                             const productPrices = {
                                 p1: customP1 > 0 ? customP1 : price1,
                                 p2: customP2 > 0 ? customP2 : price2,
-                                p3: customP3 > 0 ? customP3 : price3
+                                p3: customP3 > 0 ? customP3 : price3,
+                                p4: customP4 > 0 ? customP4 : price4 // Vi har inte stöd för customP4 än, så vi skickar bara kategorins glutenfria pris
                             };
                             const ProductPricesMessege={
-                                p1Message: "Avh:" + productPrices.p1 +":-",
-                                p2Message: "Serv:" + productPrices.p2 +":-",
+                                p1Message: "Barn:" + productPrices.p1 +":-",
+                                p2Message: "Standart:" + productPrices.p2 +":-",
                                 p3Message: "Familj:" + productPrices.p3 +":-",
+                                p4Message: "Glutenfri:" + productPrices.p4 +":-"
                             }
 
                             return (
@@ -301,6 +305,14 @@ function CategoryCard({ category, catKey,itemIds, idlist, onAdd }) {
                                                     <div className="small mt-1">
                                                         <span className="badge bg-light text-dark border">
                                                             {ProductPricesMessege.p3Message} 
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                
+                                                {(customP4 > 0 ) && (
+                                                    <div className="small mt-1">
+                                                        <span className="badge bg-light text-dark border">
+                                                            {ProductPricesMessege.p4Message} 
                                                         </span>
                                                     </div>
                                                 )}

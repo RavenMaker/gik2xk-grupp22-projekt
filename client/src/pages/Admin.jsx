@@ -243,9 +243,10 @@ const Admin = () => {
                 <input type="text" className="form-control mb-3" value={catForm.title} onChange={e => setCatForm({...catForm, title: e.target.value})} required />
                 <label className="small fw-bold">Priser (kr)</label>
                 <div className="row g-2 mb-3">
-                  <div className="col"><small>Avhämtning</small><input type="number" className="form-control" value={catForm.p1} onChange={e => setCatForm({...catForm, p1: e.target.value})} required /></div>
-                  <div className="col"><small>Servering</small><input type="number" className="form-control" value={catForm.p2} onChange={e => setCatForm({...catForm, p2: e.target.value})} /></div>
+                  <div className="col"><small>Barn</small><input type="number" className="form-control" value={catForm.p1} onChange={e => setCatForm({...catForm, p1: e.target.value})} required /></div>
+                  <div className="col"><small>Standart</small><input type="number" className="form-control" value={catForm.p2} onChange={e => setCatForm({...catForm, p2: e.target.value})} /></div>
                   <div className="col"><small>Familj</small><input type="number" className="form-control" value={catForm.p3} onChange={e => setCatForm({...catForm, p3: e.target.value})} /></div>
+                  <div className="col"><small>Glutenfri</small><input type="number" className="form-control" value={catForm.p4} onChange={e => setCatForm({...catForm, p4: e.target.value})} /></div>
                 </div>
                 <label className="small fw-bold">Bild-URL</label>
                 <input type="text" className="form-control" value={catForm.img} onChange={e => setCatForm({...catForm, img: e.target.value})} />
@@ -281,9 +282,10 @@ const Admin = () => {
                 </select>
                 <label className="small fw-bold mt-2">Individuella priser (lämna 0 för att använda kategorins pris)</label>
                 <div className="row g-2 mb-3">
-                  <div className="col"><small>Avh.</small><input type="number" className="form-control" value={prodForm.cp1} onChange={e => setProdForm({...prodForm, cp1: e.target.value})} /></div>
-                  <div className="col"><small>Serv.</small><input type="number" className="form-control" value={prodForm.cp2} onChange={e => setProdForm({...prodForm, cp2: e.target.value})} /></div>
-                  <div className="col"><small>Fam.</small><input type="number" className="form-control" value={prodForm.cp3} onChange={e => setProdForm({...prodForm, cp3: e.target.value})} /></div>
+                  <div className="col"><small>Barn.</small><input type="number" className="form-control" value={prodForm.cp1} onChange={e => setProdForm({...prodForm, cp1: e.target.value})} /></div>
+                  <div className="col"><small>Standart.</small><input type="number" className="form-control" value={prodForm.cp2} onChange={e => setProdForm({...prodForm, cp2: e.target.value})} /></div>
+                  <div className="col"><small>Familj.</small><input type="number" className="form-control" value={prodForm.cp3} onChange={e => setProdForm({...prodForm, cp3: e.target.value})} /></div>
+                  <div className="col"><small>Glutenfri.</small><input type="number" className="form-control" value={prodForm.cp4} onChange={e => setProdForm({...prodForm, cp4: e.target.value})} /></div>
                 </div>
                 <input type="text" className="form-control mb-3" placeholder="Namn" value={prodForm.title} onChange={e => setProdForm({...prodForm, title: e.target.value})} required />
                 <input type="text" className="form-control mb-3" placeholder="Inviduell bild-URL här..." value={prodForm.cImg || ''} onChange={e => setProdForm({...prodForm, cImg: e.target.value})} />
