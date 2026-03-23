@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API } from '../utils/api'
 
 const Admin = () => {
   const [menuData, setMenuData] = useState({});
@@ -12,7 +13,7 @@ const Admin = () => {
     cp1: 0, cp2: 0, cp3: 0, cImg: ''// Lägg till dessa
   });
 
-  const API_URL = 'http://localhost:5000/api/products';
+  const API_URL = `${API}/products`;
 
   const fetchData = async () => {
     try {

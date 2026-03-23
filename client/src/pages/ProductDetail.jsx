@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { API } from '../utils/api'
 
 function ProductRating({ productId, initialRating, initialCount }) {
   
@@ -13,7 +14,7 @@ function ProductRating({ productId, initialRating, initialCount }) {
     }, [initialRating, initialCount]);
 
     const saveRating = async (val) => {
-        const res = await fetch(`http://localhost:5000/api/products/${productId}/rate`, {
+      const res = await fetch(`${API}/products/${productId}/rate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ rating: val })
@@ -56,7 +57,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products/menu")
+    fetch(`${API}/products/menu`)
       .then((res) => {
         if (!res.ok) throw new Error("Serverfel");
         return res.json();

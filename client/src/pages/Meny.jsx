@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { API } from '../utils/api'
 
 
 const topCategories = [
@@ -26,7 +27,7 @@ function ProductRating({ productId, initialRating, initialCount }) {
     }, [initialRating, initialCount]);
 
     const saveRating = async (val) => {
-        const res = await fetch(`http://localhost:5000/api/products/${productId}/rate`, {
+        const res = await fetch(`${API}/products/${productId}/rate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ rating: val })
@@ -71,7 +72,7 @@ export default function Meny() {
     const [activeProduct, setActiveProduct] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/products/menu")     
+        fetch(`${API}/products/menu`)
             .then(res => {
                 if (!res.ok) throw new Error("Servern svarade med fel")
                 return res.json()
@@ -82,8 +83,8 @@ export default function Meny() {
             })
             .catch(err => {
                 console.error("Fel vid hämtning:", err)
-                setLoading(true)
-                setError(null)  
+                setLoading(false)
+                setError(err)
             })
     }, [])
 
