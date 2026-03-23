@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { API } from '../utils/api'
 import CartNavbar from '../components/CartNavbar'
 import PriceModal from '../components/PriceModal'
 import CategoryCard from '../components/CategoryCard'
@@ -27,6 +29,46 @@ const loadCart = () => {
     } catch { return []; }
 };
 
+    useEffect(() => {
+        setRating(parseFloat(initialRating) || 0); 
+        setCount(parseInt(initialCount) || 0);
+    }, [initialRating, initialCount]);
+
+    const saveRating = async (val) => {
+        const res = await fetch(`${API}/products/${productId}/rate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rating: val })
+        });
+        if (res.ok) {
+            setCount(c => c + 1);
+            alert("Tack!");
+        }
+    };
+
+    return (
+        <div className="d-flex align-items-center">
+            {[1, 2, 3, 4, 5].map((i) => {
+                const activeVal = hover || rating;
+                let fill = 0;
+                if (activeVal >= i) fill = 100;
+                else if (activeVal > i - 1) fill = (activeVal - (i - 1)) * 100;
+
+                return (
+                    <span key={i} onClick={() => saveRating(i)} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(0)}
+                          style={{ position: 'relative', cursor: 'pointer', fontSize: '1.2rem', color: '#ccc' }}>
+                        <span>★</span>
+                        <span style={{
+                            position: 'absolute', top: 0, left: 0, width: `${fill}%`,
+                            overflow: 'hidden', color: '#ffc107'
+                        }}>★</span>
+                    </span>
+                );
+            })}
+            <span className="ms-2 small text-muted">({count})</span>
+        </div>
+    );
+}
 const saveCart = (cart) => {
     try {
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -44,6 +86,7 @@ export default function Meny() {
 
     // Persist cart to localStorage whenever it changes
     useEffect(() => {
+        fetch(`${API}/products/menu`)
         saveCart(cart);
     }, [cart]);
 
@@ -61,6 +104,7 @@ export default function Meny() {
             .catch(err => {
                 console.error("Fel vid hämtning:", err)
                 setLoading(false)
+                setError(err)
             })
     }, [])
 

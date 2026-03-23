@@ -1,5 +1,53 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { API } from '../utils/api'
+
+function ProductRating({ productId, initialRating, initialCount }) {
+  
+    const [rating, setRating] = useState(parseFloat(initialRating) || 0);
+    const [count, setCount] = useState(parseInt(initialCount) || 0);
+    const [hover, setHover] = useState(0);
+
+    useEffect(() => {
+        setRating(parseFloat(initialRating) || 0);
+        setCount(parseInt(initialCount) || 0);
+    }, [initialRating, initialCount]);
+
+    const saveRating = async (val) => {
+      const res = await fetch(`${API}/products/${productId}/rate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rating: val })
+        });
+        if (res.ok) {
+            setCount(c => c + 1);
+            alert("Tack!");
+        }
+    };
+
+    return (
+        <div className="d-flex align-items-center">
+            {[1, 2, 3, 4, 5].map((i) => {
+                const activeVal = hover || rating;
+                let fill = 0;
+                if (activeVal >= i) fill = 100;
+                else if (activeVal > i - 1) fill = (activeVal - (i - 1)) * 100;
+
+                return (
+                    <span key={i} onClick={() => saveRating(i)} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(0)}
+                          style={{ position: 'relative', cursor: 'pointer', fontSize: '1.2rem', color: '#ccc' }}>
+                        <span>★</span>
+                        <span style={{
+                            position: 'absolute', top: 0, left: 0, width: `${fill}%`,
+                            overflow: 'hidden', color: '#ffc107'
+                        }}>★</span>
+                    </span>
+                );
+            })}
+            <span className="ms-2 small text-muted">({count})</span>
+        </div>
+    );
+}
 import ProductRating from '../components/ProductRating';
 
 export default function ProductDetail() {
@@ -10,7 +58,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products/menu")
+    fetch(`${API}/products/menu`)
       .then((res) => {
         if (!res.ok) throw new Error("Serverfel");
         return res.json();
