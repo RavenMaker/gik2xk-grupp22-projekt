@@ -9,8 +9,8 @@ const topCategories = [
     { href: "salad",        img: "https://cdn-icons-png.flaticon.com/512/2515/2515183.png", name: "vegetarian" },
     { href: "husman",       img: "https://cdn-icons-png.flaticon.com/512/3480/3480823.png", name: "Husman" },
     { href: "pastaratter",  img: "https://cdn-icons-png.flaticon.com/512/4465/4465494.png", name: "Pastarätter" },
-    { href: "dryck", img: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png", name: "Våra drycker" },
-    { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/1046/1046784.png", name: "Extra tillägg" },
+    { href: "dryck",        img: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png", name: "Våra drycker" },
+    { href: "extra",        img: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png", name: "Extra tillägg" },
 ]
 
 const fallbackData = {
