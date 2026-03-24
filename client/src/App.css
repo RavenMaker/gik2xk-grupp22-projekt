@@ -32,7 +32,9 @@
 .center-text {
   margin-bottom: 30px;
 }
-
+.rating{
+  display: flex;
+}
 .restaurant-name {
   font-size: 55px;
   font-weight: 800;

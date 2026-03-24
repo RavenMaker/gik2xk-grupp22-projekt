@@ -42,7 +42,7 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                             return (
                                 <li key={itemKey} className="Pizza-discription mb-3">
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <div className='d-flex flex-column'>
+                                        <div className='d-flex flex-column align-items-start'>
                                             <Link to={`/product/${idlist[`${catKey}-${itemKey}`]}`} className="text-dark text-decoration-none">
                                                 <div style={{ flex: 1 }}>
                                                     <strong>

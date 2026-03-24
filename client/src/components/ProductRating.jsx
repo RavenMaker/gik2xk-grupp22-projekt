@@ -84,14 +84,17 @@ export default function ProductRating({ productId, initialRating, initialCount }
                         </span>
                     );
                 })}
-                <span className="ms-2 small text-muted">({count})</span>
-                {thanks && (
-                    <span className="ms-2 small text-success fw-bold">Tack för ditt betyg!</span>
-                )}
-                {hasRated && !thanks && (
-                    <span className="ms-2 small text-muted fst-italic">Du har redan betygsatt</span>
-                )}
+                <div className='rating'>
+                    <span className="ms-2 small text-muted">({count})</span>
+                    {thanks && (
+                        <span className="ms-2 small text-success fw-bold">Tack för ditt betyg!</span>
+                    )}
+                    {hasRated && !thanks && (
+                        <span className="ms-2 small text-muted fst-italic">Du har redan betygsatt</span>
+                    )}
+                </div>
             </div>
+            
         </div>
     );
 }

@@ -19,8 +19,8 @@ export default function ProductDetail() {
       .then((data) => {
         setMenuItem(data);
       })
-      .catch(() => {
-        setMenuItem(fallbackData);
+      .catch((e) => {
+        console.log(e);
       });
   }, []);
 
