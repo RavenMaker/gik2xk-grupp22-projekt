@@ -9,10 +9,10 @@ const Admin = () => {
   const [message, setMessage] = useState('');
   const [editTarget, setEditTarget] = useState(null);
 
-  const [catForm, setCatForm] = useState({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
+  const [catForm, setCatForm] = useState({ name: '', title: '', p1: 0, p2: 0, p3: 0, p4: 0, img: '' });
   const [prodForm, setProdForm] = useState({
     selectedName: '', selectedTitle: '', title: '', desc: '',
-    cp1: 0, cp2: 0, cp3: 0, cImg: ''
+    cp1: 0, cp2: 0, cp3: 0, cp4: 0, cImg: ''
   });
 
   const API_URL = `${API}/products`;

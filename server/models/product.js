@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0 
     },
 
-    custom_image_product: { 
+    custom_image_pruduct: { 
       type: DataTypes.STRING 
     },
     image_url: { 
