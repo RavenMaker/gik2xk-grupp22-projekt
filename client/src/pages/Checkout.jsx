@@ -100,10 +100,10 @@ export default function Checkout() {
             {/* Villkorliga fält baserat på val */}
             {paymentMethod === 'card' && (
               <div className="p-3 bg-light rounded mb-4 border">
-                <input className="form-control mb-2" placeholder="Kortnummer" />
+                <input className="form-control mb-2" placeholder="Kortnummer" required />
                 <div className="d-flex gap-2">
-                  <input className="form-control" placeholder="MM/ÅÅ" />
-                  <input className="form-control" placeholder="CVC" />
+                  <input className="form-control" placeholder="MM/ÅÅ" required />
+                  <input className="form-control" placeholder="CVC" required />
                 </div>
               </div>
             )}
