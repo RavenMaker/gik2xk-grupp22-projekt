@@ -51,8 +51,7 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                                                             : ""}
                                                         {namn}
                                                     </strong>
-                                                    {" – "}
-                                                    {beskrivning}
+                                                    
                                                 </div>
                                             </Link>
                                             <div>
