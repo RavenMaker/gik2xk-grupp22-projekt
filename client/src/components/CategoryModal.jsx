@@ -28,16 +28,20 @@ export default function CategoryModal({ editTarget, catForm, setCatForm, onClose
                             <label className="small fw-bold">Priser (kr)</label>
                             <div className="row g-2 mb-3">
                                 <div className="col">
-                                    <small>Avhämtning</small>
+                                    <small>Barn</small>
                                     <input type="number" className="form-control" value={catForm.p1} onChange={e => setCatForm({ ...catForm, p1: e.target.value })} required />
                                 </div> 
                                 <div className="col">
-                                    <small>Servering</small>
+                                    <small>Standart</small>
                                     <input type="number" className="form-control" value={catForm.p2} onChange={e => setCatForm({ ...catForm, p2: e.target.value })} />
                                 </div>
                                 <div className="col">
                                     <small>Familj</small>
                                     <input type="number" className="form-control" value={catForm.p3} onChange={e => setCatForm({ ...catForm, p3: e.target.value })} />
+                                </div>
+                                <div className="col">
+                                    <small>Glutenfri</small>
+                                    <input type="number" className="form-control" value={catForm.p4} onChange={e => setCatForm({ ...catForm, p4: e.target.value })} />
                                 </div>
                             </div>
                             <label className="small fw-bold">Bild-URL</label>
