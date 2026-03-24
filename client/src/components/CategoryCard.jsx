@@ -18,7 +18,7 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
 
             <div className="row align-items-center g-4">
                 <div className="col-md-4 text-center">
-                    <img src={imageClass} alt={title} className="pizza-img" />
+                    <img src={imageClass} alt={title} className="img" />
                 </div>
                 <div className="col-md-8">
                     <ol className="pizza-list">
