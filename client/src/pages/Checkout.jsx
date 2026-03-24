@@ -24,12 +24,12 @@ export default function Checkout() {
         const res = await fetch(`${API}/products/pay`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: 1 })
+            // userId=1 är gästanvändaren (ingen inloggning implementerad)
+            body: JSON.stringify({ userId: 1, items: cartItems })
         });
  
         if (res.ok) {
             const data = await res.json();
-            // Tömmer listan som finns i Meny.jsx
             localStorage.removeItem('guestCart');
             alert(data.message);
             window.location.href = "/";

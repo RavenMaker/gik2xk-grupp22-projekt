@@ -94,6 +94,14 @@ export default function Meny() {
             return updated;
         });
 
+        // Synka till databasen (krav sida 8 — varukorg sparas i backend)
+        // Använder userId=1 som gästanvändare då inloggning ej är implementerat
+        fetch(`${API}/cart/addProduct`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: 1, productId, amount: 1 })
+        }).catch(err => console.warn('Backend-synk misslyckades:', err));
+
         showMessage('Tillagd i varukorgen!');
     };
 

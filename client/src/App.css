@@ -393,4 +393,28 @@
   align-items: center;
   margin: 0px;
 }
+.productDetail-contaner{
+  width: 16rem;
+}
+
+.productDetail-contaner div{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   
+}
+.productDetail a{
+  color:black;
+  transition: 0.2s;
+  
+}
+.productDetail a:hover{
+  color:orange;
+  
+}
+.productDetail-contaner div strong{
+  width: 100%;
+  display: flex;
+  align-items:flex-start;
+}

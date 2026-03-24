@@ -3,7 +3,10 @@ const router = express.Router();
 const productService = require('../services/productService');
 
 // Extra: return menu-shaped data matching client's fallbackData structure
-
+const verifyAdmin = (req, res, next) => {
+  if (req.headers['authorization'] === 'pizzakung123') next();
+  else res.status(403).json({ message: "Endast Admin" });
+};
 
 // 1. Hämta alla produkter
 router.get('/', async (req, res) => {
@@ -83,7 +86,7 @@ router.post('/pay', (req, res) => {
 });
 
 // 5. Skapa ny produkt (Admin - Krav sida 9)
-router.post('/', async (req, res) => {
+router.post('/',verifyAdmin, async (req, res) => {
   try {
     const newProduct = await productService.createProduct(req.body);
     res.status(201).json(newProduct);
@@ -93,7 +96,7 @@ router.post('/', async (req, res) => {
 });
 
 // 6. Ta bort produkt (Admin - Krav sida 9)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',verifyAdmin, async (req, res) => {
   try {
     const success = await productService.deleteProduct(req.params.id);
     if (success) res.sendStatus(204);
@@ -104,7 +107,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Uppdatera produkt (Admin)
-router.put('/:id', async (req, res) => {
+router.put('/:id',verifyAdmin, async (req, res) => {
   try {
     const updatedProduct = await productService.updateProduct(req.params.id, req.body);
     if (!updatedProduct) {

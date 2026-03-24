@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Menu from './pages/Meny.jsx'
@@ -9,7 +10,27 @@ import ProductDetail from "./pages/ProductDetail.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import './App.css'
 
+const CART_KEY = 'guestCart';
+
 function App() {
+  // Läser kundvagn från localStorage så att räknaren syns i navbaren på alla sidor
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const updateCount = () => {
+      try {
+        const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        setCartCount(cart.reduce((sum, item) => sum + item.amount, 0));
+      } catch { setCartCount(0); }
+    };
+    updateCount();
+    // Lyssnar på ändringar från Meny.jsx via storage-event
+    window.addEventListener('storage', updateCount);
+    // Polling var 500ms som backup (storage-event triggas ej inom samma flik)
+    const interval = setInterval(updateCount, 500);
+    return () => { window.removeEventListener('storage', updateCount); clearInterval(interval); };
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -28,6 +49,10 @@ function App() {
                   <li className="nav-item">
                     <Link className="nav-link" to="/lunch">Veckans Lunch</Link>
                   </li>
+                  {/* Kundvagn alltid synlig i navbaren */}
+                  <li className="nav-item cheackout-stats">
+                    <Link className="nav-link btn fw-bold ms-2 px-3 cheackout" to="/checkout"><p className='cheackout'>Varukorg</p>{cartCount > 0 && <span className="badge bg-dark ms-1">{cartCount}</span>}</Link>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -43,6 +68,7 @@ function App() {
             <Route path="/admin"   element={<Admin />} />
             <Route path="/product/:id"   element={<ProductDetail />} />
             <Route path="/cheackout" element={<Checkout />}/>
+            <Route path="/checkout" element={<Checkout />}/>
 
           </Routes>
 

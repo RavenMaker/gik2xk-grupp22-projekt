@@ -9,6 +9,8 @@ export default function ProductDetail() {
   const [menuItem, setMenuItem] = useState({});
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  // Lista av betyg hämtad direkt från databasen (krav sida 5)
+  const [ratingsList, setRatingsList] = useState([]);
 
   useEffect(() => {
     fetch(`${API}/products/menu`)
@@ -62,6 +64,16 @@ export default function ProductDetail() {
 
     setProduct(foundProduct);
     setLoading(false);
+
+    // Hämta individuella betyg från databasen när produkten hittas
+    if (foundProduct) {
+      fetch(`${API}/products/${foundProduct.productId}`)
+        .then(res => res.json())
+        .then(data => {
+          setRatingsList(data.ratings || []);
+        })
+        .catch(() => setRatingsList([]));
+    }
   }, [menuItem, id]);
 
   if (loading) {
@@ -102,6 +114,26 @@ export default function ProductDetail() {
           initialRating={product.avgRating}
           initialCount={product.revCount}
         />
+
+        {/* Lista av individuella betyg (krav sida 5) */}
+        {ratingsList.length > 0 && (
+          <div className="mt-3">
+            <h6 className="mb-2">Betygshistorik ({ratingsList.length} betyg)</h6>
+            <ul className="list-group list-group-flush" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+              {ratingsList.map((r, i) => (
+                <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                  <span className="text-muted small">Betyg {i + 1}</span>
+                  <span>
+                    {[1,2,3,4,5].map(star => (
+                      <span key={star} style={{ color: star <= r.rating ? '#ffc107' : '#ccc', fontSize: '0.9rem' }}>★</span>
+                    ))}
+                    <span className="ms-1 small text-muted">({r.rating})</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <Link to="/menu" className="btn btn-dark mt-3">
           Tillbaka till menyn

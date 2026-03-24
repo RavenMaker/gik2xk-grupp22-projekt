@@ -42,18 +42,22 @@ export default function CategoryCard({ category, catKey, itemIds, idlist, onAdd 
                             return (
                                 <li key={itemKey} className="Pizza-discription mb-3">
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <div className='d-flex flex-column align-items-start'>
-                                            <Link to={`/product/${idlist[`${catKey}-${itemKey}`]}`} className="text-dark text-decoration-none">
+                                        <div className='d-flex flex-column align-items-start productDetail-contaner'>
+                                            
                                                 <div style={{ flex: 1 }}>
                                                     <strong>
                                                         {itemIds[`${catKey}-${itemKey}`]
                                                             ? `${itemIds[`${catKey}-${itemKey}`]}. `
                                                             : ""}
                                                         {namn}
+                                                        
                                                     </strong>
-                                                    
+                                                    <div className="productDetail">
+                                                        <Link to={`/product/${idlist[`${catKey}-${itemKey}`]}`} className="badge bg-light border text-decoration-none">Mer om produkten</Link>
+                                                    </div>
                                                 </div>
-                                            </Link>
+                                                
+                                            
                                             <div>
                                                 <ProductRating productId={id} initialRating={avgRating} initialCount={revCount} />
                                             </div>

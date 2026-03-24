@@ -20,6 +20,8 @@ const productService = {
       image_url: plainProduct.image_url,
       averageRating: average.toFixed(1), // Genomsnittet (t.ex. 4.5)
       reviewCount: ratings.length,        // ANTAL personer som röstat
+      // Lista av individuella betyg (krav sida 5)
+      ratings: ratings.map(r => ({ id: r.id, rating: r.rating, createdAt: r.createdAt })),
       custom_price1: plainProduct.custom_price1,
       custom_price2: plainProduct.custom_price2,
       custom_price3: plainProduct.custom_price3,

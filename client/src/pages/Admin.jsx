@@ -34,7 +34,7 @@ const Admin = () => {
 
   useEffect(() => { 
     if(localStorage.getItem('adminToken') !== 'pizzakung123') {
-      window.location.href = '/singin'; // Sparka ut obehöriga
+      window.location.href = '/singIn'; // Sparka ut obehöriga
     } else {
       fetchData(); 
     }
