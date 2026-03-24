@@ -42,7 +42,7 @@ export default function ProductDetail() {
       const [urlName, title, { price1, price2, price3, price4, imageClass, itemlist }] = category;
 
       Object.entries(itemlist).forEach(([itemKey, itemData]) => {
-        const [namn, beskrivning, productId, avgRating, revCount, customP1, customP2, customP3, customImg] = itemData;
+        const [namn, beskrivning, productId, avgRating, revCount, customP1, customP2, customP3, costumP4, customImg] = itemData;
 
         if (String(runningId) === String(id)) {
           foundProduct = {
