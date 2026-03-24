@@ -70,6 +70,18 @@ router.post('/add-to-cart', async (req, res) => {
   }
 });
 
+router.post('/pay', (req, res) => {
+  try {
+    // Här kan du lägga till logik för att spara i databas om du vill i framtiden,
+    // men just nu svarar vi bara och bekräftar.
+    res.status(200).json({ 
+      message: "Tack för att du köper hos oss!" 
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Något gick fel vid betalningen." });
+  }
+});
+
 // 5. Skapa ny produkt (Admin - Krav sida 9)
 router.post('/', async (req, res) => {
   try {

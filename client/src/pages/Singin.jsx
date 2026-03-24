@@ -8,13 +8,11 @@ export default function Singin() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Enkel validering för att simulera inloggning
     if (email === 'admin@zkrog.se' && password === 'admin123') {
-      console.log("Inloggad!");
-      navigate('/admin'); // 3. Skicka användaren till Admin-sidan
+      localStorage.setItem('adminToken', 'pizzakung123'); // Sparar inloggningen
+      navigate('/admin');
     } else {
-      alert("Fel e-post eller lösenord! (Testa admin@zkrog.se / admin123)");
+      alert("Fel e-post eller lösenord!");
     }
   };
 

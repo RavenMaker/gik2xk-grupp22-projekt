@@ -17,7 +17,15 @@
 .custom-navbar .nav-link:hover {
   color:#ff7a00;
 }
-
+.cheackout-stats{
+  display: flex;
+  justify-content: space-between;
+}
+.cheackout{
+  display: flex;
+  align-items: center;
+  margin: 0px;
+}
 .hero-content {
   min-height: 100vh;
   background: url("/imges/wood.webp") center/cover no-repeat;

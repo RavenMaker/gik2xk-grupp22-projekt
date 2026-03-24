@@ -24,7 +24,7 @@ export default function CartNavbar({ cart, onRemove }) {
                                         </div>
                                     </li>
                                 ))}
-                                <li className="fw-bold pt-2 text-end">Totalt: {total}:-</li>
+                                <li className="fw-bold pt-2 text-end"><div className="cheackout-stats"><a className="nav-link cheackout" href="/cheackout">Cheack out</a><p className="cheackout">Totalt: {total}:-</p></div></li>
                             </>
                         )}
                     </ul>

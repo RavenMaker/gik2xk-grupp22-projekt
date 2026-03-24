@@ -6,6 +6,7 @@ import Lunch from './pages/Lunch.jsx'
 import Singin from './pages/Singin.jsx'
 import Admin from './pages/Admin.jsx'
 import ProductDetail from "./pages/ProductDetail.jsx";
+import Checkout from "./pages/Checkout.jsx";
 import './App.css'
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
             <Route path="/singIn"   element={<Singin />} />
             <Route path="/admin"   element={<Admin />} />
             <Route path="/product/:id"   element={<ProductDetail />} />
+            <Route path="/cheackout" element={<Checkout />}/>
 
           </Routes>
 

@@ -31,7 +31,16 @@ const Admin = () => {
     }
   };
 
-  useEffect(() => { fetchData(); }, []);
+
+  useEffect(() => { 
+    if(localStorage.getItem('adminToken') !== 'pizzakung123') {
+      window.location.href = '/singin'; // Sparka ut obehöriga
+    } else {
+      fetchData(); 
+    }
+  }, []);
+
+  
 
   const handleEditCategory = (catName, catTitle) => {
     const catInfo = rawProducts.find(p => p.title === "Kategori Info" && p.category === catTitle);
@@ -54,6 +63,7 @@ const Admin = () => {
     const isUpdate = !!editTarget;
     const url = isUpdate ? `${API_URL}/${editTarget.id}` : API_URL;
     const method = isUpdate ? 'PUT' : 'POST';
+    
 
     let payload = {};
 
@@ -86,7 +96,7 @@ const Admin = () => {
     try {
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json','Authorization': localStorage.getItem('adminToken')},
         body: JSON.stringify(payload)
       });
 
@@ -103,7 +113,7 @@ const Admin = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Radera produkt?")) return;
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' },{headers: { 'Content-Type': 'application/json','Authorization': localStorage.getItem('adminToken')},});
       if (res.ok) fetchData();
     } catch (err) { setMessage('Kunde inte radera.'); }
   };
@@ -118,8 +128,8 @@ const Admin = () => {
 
   const closeModals = () => {
     setEditTarget(null);
-    setCatForm({ name: '', title: '', p1: 0, p2: 0, p3: 0, img: '' });
-    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1: 0, cp2: 0, cp3: 0, cImg: '' });
+    setCatForm({ name: '', title: '', p1: 0, p2: 0, p3: 0,p4:0, img: '' });
+    setProdForm({ selectedName: '', selectedTitle: '', title: '', desc: '', cp1: 0, cp2: 0, cp3: 0,cp4:0, cImg: '' });
     document.querySelectorAll('.modal').forEach(el => {
       const m = window.bootstrap.Modal.getInstance(el);
       if (m) m.hide();
