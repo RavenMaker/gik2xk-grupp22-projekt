@@ -41,27 +41,29 @@ export default function Checkout() {
     }
  
     return (
-        <div className="container mt-5 mb-5">
-            <div className="row">
-                {/* VÄNSTER SIDA: FORMULÄR */}
-                <div className="col-md-7">
-                    <form className="card p-4 shadow-sm border-0" onSubmit={handlePayment}>
-                        <DeliveryForm />
-                        <PaymentMethodSelector
-                            selected={paymentMethod}
-                            onSelect={setPaymentMethod}
-                        />
-                        {paymentMethod === 'card' && <CardFields />}
-                        {paymentMethod === 'swish' && <SwishFields />}
-                        <button className="btn btn-success btn-lg w-100 mt-2 shadow-sm">
-                            Slutför köp ({totalSum} kr)
-                        </button>
-                    </form>
-                </div>
- 
-                {/* HÖGER SIDA: DIN BESTÄLLNING */}
-                <div className="col-md-5">
-                    <OrderSummary cartItems={cartItems} totalSum={totalSum} />
+        <div className="menu-page">
+            <div className='container mt-5 mb-5'>
+                <div className="row">
+                    {/* VÄNSTER SIDA: FORMULÄR */}
+                    <div className="col-md-7">
+                        <form className="card p-4 shadow-sm border-0" onSubmit={handlePayment}>
+                            <DeliveryForm />
+                            <PaymentMethodSelector
+                                selected={paymentMethod}
+                                onSelect={setPaymentMethod}
+                            />
+                            {paymentMethod === 'card' && <CardFields />}
+                            {paymentMethod === 'swish' && <SwishFields />}
+                            <button className="btn btn-success btn-lg w-100 mt-2 shadow-sm">
+                                Slutför köp ({totalSum} kr)
+                            </button>
+                        </form>
+                    </div>
+    
+                    {/* HÖGER SIDA: DIN BESTÄLLNING */}
+                    <div className="col-md-5">
+                        <OrderSummary cartItems={cartItems} totalSum={totalSum} />
+                    </div>
                 </div>
             </div>
         </div>
