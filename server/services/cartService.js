@@ -2,13 +2,13 @@ const { Cart, CartRow } = require('../models');
 
 const cartService = {
   async addProductToCart(userId, productId, amount) {
-    // Step 1: Find or create cart for this user
+    // Find or create cart for this user
     const [cart] = await Cart.findOrCreate({
       where: { user_id: userId, payed: false },
       defaults: { payed: false }
     });
 
-    // Step 2: Check if product is already in the cart
+    // Check if product is already in the cart
     const existingRow = await CartRow.findOne({
       where: { cart_id: cart.id, product_id: productId }
     });

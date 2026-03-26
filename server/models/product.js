@@ -8,22 +8,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT 
     },
     price1: { 
-      type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
+      type: DataTypes.DOUBLE, 
       allowNull: false,
       defaultValue: 0
     },
     price2: { 
-      type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
+      type: DataTypes.DOUBLE, 
       allowNull: false,
       defaultValue: 0
     },
     price3: { 
-      type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
+      type: DataTypes.DOUBLE, 
       allowNull: false,
       defaultValue: 0 
     },
     price4: { 
-      type: DataTypes.DOUBLE, // Både DOUBLE och FLOAT fungerar bra här
+      type: DataTypes.DOUBLE,
       allowNull: false,
       defaultValue: 0
     },

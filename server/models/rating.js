@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true
   });
   Rating.associate = (models) => {
-  // Ett betyg hör till en specifik produkt [cite: 187, 191]
+  // Ett betyg hör till en specifik produkt 
   Rating.belongsTo(models.Product, { foreignKey: 'product_id' });
 };
   return Rating;

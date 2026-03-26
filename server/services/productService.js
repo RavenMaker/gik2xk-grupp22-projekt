@@ -1,7 +1,7 @@
 const { Product, Rating, Cart, CartRow } = require('../models');
 
 const productService = {
-  // Hjälpmetod för att "städa" produktobjekt (Sida 9) 
+  // Hjälpmetod för att "städa" produktobjekt 
  _cleanProduct(product) {
     const plainProduct = product.get({ plain: true });
     const ratings = plainProduct.Ratings || [];
@@ -18,9 +18,9 @@ const productService = {
       price3: plainProduct.price3,
       price4: plainProduct.price4,
       image_url: plainProduct.image_url,
-      averageRating: average.toFixed(1), // Genomsnittet (t.ex. 4.5)
+      averageRating: average.toFixed(1), // Genomsnittet av betygen, avrundat till 1 decimal
       reviewCount: ratings.length,        // ANTAL personer som röstat
-      // Lista av individuella betyg (krav sida 5)
+      // Lista av individuella betyg med id, rating och createdAt (för att kunna visa senaste betygen i frontend)
       ratings: ratings.map(r => ({ id: r.id, rating: r.rating, createdAt: r.createdAt })),
       custom_price1: plainProduct.custom_price1,
       custom_price2: plainProduct.custom_price2,
@@ -42,7 +42,7 @@ const productService = {
   },
 
   async getMenu() {
-    // VIKTIGT: Lägg till include: [Rating] här så vi får med betygen från start
+    //  här så vi får med betygen från start
     const products = await Product.findAll({ include: [Rating] }); 
     const plain = products.map(p => (p.get ? p.get({ plain: true }) : p));
 
@@ -116,21 +116,21 @@ const productService = {
   });
 },
 
-  // NY: Logik för att lägga produkt i varukorg (Sida 8) [cite: 216, 219]
+  // Logik för att lägga produkt i varukorg 
   async addProductToCart(userId, productId, amount) {
     // Hitta eller skapa senaste varukorg (Sida 8) [cite: 220, 222]
     const [cart] = await Cart.findOrCreate({
       where: { user_id: userId, payed: false }
     });
 
-    // Spara i kopplingstabell cart_row (Sida 8) [cite: 223]
+    // Spara i kopplingstabell cart_row 
     const [row, created] = await CartRow.findOrCreate({
       where: { cart_id: cart.id, product_id: productId },
       defaults: { amount: amount }
     });
 
     if (!created) {
-      // Om den redan finns, uppdatera antalet (Sida 8) [cite: 224]
+      // Om den redan finns, uppdatera antalet 
       await row.update({ amount: row.amount + amount });
     }
     return row;

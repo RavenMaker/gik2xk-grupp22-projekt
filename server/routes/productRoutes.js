@@ -39,8 +39,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// 3. GE ETT BETYG (Denna saknades!)
-// Krav sida 5: "Gränssnitt för att betygsätta en produkt"
+// 3. GE ETT BETYG 
+
 router.post('/:id/rate', async (req, res) => {
   try {
     const { rating } = req.body;
@@ -54,7 +54,7 @@ router.post('/:id/rate', async (req, res) => {
   }
 });
 
-// 4. Lägg en produkt i varukorgen (Krav sida 8)
+// 4. Lägg en produkt i varukorgen 
 router.post('/add-to-cart', async (req, res) => {
   try {
     const { userId, productId, amount } = req.body;
@@ -85,7 +85,7 @@ router.post('/pay', (req, res) => {
   }
 });
 
-// 5. Skapa ny produkt (Admin - Krav sida 9)
+// 5. Skapa ny produkt 
 router.post('/',verifyAdmin, async (req, res) => {
   try {
     const newProduct = await productService.createProduct(req.body);
@@ -95,7 +95,7 @@ router.post('/',verifyAdmin, async (req, res) => {
   }
 });
 
-// 6. Ta bort produkt (Admin - Krav sida 9)
+// 6. Ta bort produkt (Admin)
 router.delete('/:id',verifyAdmin, async (req, res) => {
   try {
     const success = await productService.deleteProduct(req.params.id);

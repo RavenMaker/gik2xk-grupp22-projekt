@@ -2,16 +2,16 @@ module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define('Cart', {
     payed: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false // Startar som obetald [cite: 168, 169]
+      defaultValue: false // Startar som obetald 
     }
   }, {
     tableName: 'cart',
     timestamps: true,
-    underscored: true // Skapar created_at och updated_at [cite: 157, 159]
+    underscored: true // Skapar created_at och updated_at
   });
 
   Cart.associate = (models) => {
-    // En varukorg tillhör en användare [cite: 173, 188]
+    // En varukorg tillhör en användare 
     Cart.belongsTo(models.User, { foreignKey: 'user_id' });
     // En varukorg kan innehålla många produkter via cart_row 
     Cart.belongsToMany(models.Product, { 

@@ -3,7 +3,6 @@ const router = express.Router();
 const userService = require('../services/userService');
 
 // GET /api/users/:id/cart - Hämta en specifik användares varukorg
-// Detta uppfyller kravet på sida 8: "Som kund vill jag kunna se min varukorg"
 router.get('/:id/cart', async (req, res) => {
   try {
     const cart = await userService.getUserCart(req.params.id);
